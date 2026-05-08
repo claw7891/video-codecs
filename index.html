@@ -402,10 +402,69 @@
 document.addEventListener('DOMContentLoaded', () => {
   console.log('🎥 Video Codecs Course: Loaded!');
   
-  // Pipeline quantization demo
-  if (typeof QuantDemo !== 'undefined') {
+  // Self-contained quantization demo (avoids DPR/putImageData issues)
+  const qCanvas = document.getElementById('pipeline-demo');
+  const qSlider = document.getElementById('pipeline-qp');
+  const qDisplay = document.getElementById('pipeline-qp-display');
+  
+  function drawQuantDemo(qp) {
+    if (!qCanvas) return;
+    const qCtx = qCanvas.getContext('2d');
+    const W = 440, H = 160;
+    qCanvas.width = W;
+    qCanvas.height = H;
+    
+    const qStep = Math.max(1, qp * 0.4 + 2);
+    const cx = W / 2, cy = H / 2;
+    
+    // Draw pixel by pixel using fillRect
+    for (let y = 0; y < H; y += 1) {
+      for (let x = 0; x < W; x += 1) {
+        const dist = Math.sqrt((x - cx) ** 2 + (y - cy) ** 2);
+        const angle = Math.atan2(y - cy, x - cx);
+        let orig = 128 + 100 * Math.sin(dist * 0.04) * Math.cos(angle * 3);
+        orig += 40 * (Math.sin(x * 0.08) * Math.sin(y * 0.08));
+        if (Math.abs(x - cx) < 3 || Math.abs(y - cy) < 3) orig = 200;
+        
+        let quantized = Math.round(orig / qStep) * qStep;
+        quantized = Math.max(0, Math.min(255, quantized));
+        
+        const band = Math.floor(quantized / (qStep * 2));
+        const r = quantized;
+        const g = Math.max(0, Math.min(255, quantized + Math.sin(band * 0.5) * 8));
+        const b = Math.max(0, Math.min(255, quantized + Math.cos(band * 0.5) * 8));
+        
+        qCtx.fillStyle = 'rgb(' + r + ',' + g + ',' + b + ')';
+        qCtx.fillRect(x, y, 1, 1);
+      }
+    }
+    
+    // Overlay info
+    qCtx.fillStyle = 'rgba(14,14,18,0.65)';
+    qCtx.fillRect(0, 0, W, 26);
+    qCtx.fillStyle = '#00bcd4';
+    qCtx.font = 'bold 11px system-ui, sans-serif';
+    qCtx.textAlign = 'left';
+    qCtx.fillText('QP = ' + qp + ' | Step = ' + qStep.toFixed(1), 8, 17);
+  }
+  
+  if (qCanvas && qSlider) {
+    drawQuantDemo(parseInt(qSlider.value) || 25);
+    if (qDisplay) qDisplay.textContent = qSlider.value;
+    qSlider.addEventListener('input', function() {
+      const val = parseInt(this.value);
+      if (qDisplay) qDisplay.textContent = val;
+      drawQuantDemo(val);
+    });
+  }
+  
+  // Legacy fallback
+  if (typeof QuantDemo !== 'undefined' && (!qCanvas || !qSlider)) {
     QuantDemo.init('pipeline-demo', 'pipeline-qp', 'pipeline-qp-display');
   }
+  
+  // Frame type cards — colored blocks (CSS-only, no JS needed)
+  console.log('✅ Index page demos initialized');
 });
 </script>
 </body>
