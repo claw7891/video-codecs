@@ -10,16 +10,14 @@
   .demo-video {
     width: 100%;
     max-width: 480px;
-    height: 270px;
     background: var(--bg-card);
     border-radius: var(--radius-sm);
     overflow: hidden;
     margin: 1rem auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-muted);
-    font-style: italic;
+  }
+  .demo-video canvas {
+    display: block;
+    touch-action: manipulation;
   }
   .codec-comparison {
     display: grid;
@@ -143,13 +141,19 @@
   </p>
 
   <div class="widget">
-    <div class="widget-header">🎥 Video Codec Pipeline Demo</div>
+    <div class="widget-header">🎥 Pipeline in Action: Quantization Effect</div>
     <div class="widget-body">
       <div class="demo-video">
-        [Video compression visualization would go here]
+        <canvas id="pipeline-demo" width="440" height="160" style="width:100%;height:auto;"></canvas>
       </div>
-      <p style="font-size:0.8rem;color:var(--text-muted);text-align:center;margin-top:0.5rem;">
-        Each frame goes through prediction, transform, quantization, and encoding to achieve compression
+      <div class="widget-controls">
+        <label>Quantization (QP):
+          <input type="range" id="pipeline-qp" min="1" max="51" value="25">
+          <span class="value-display" id="pipeline-qp-display">25</span>
+        </label>
+      </div>
+      <p class="widget-desc">
+        Each frame goes through prediction, transform, quantization, and encoding. The slider shows how quantization parameter (QP) affects the reconstructed detail — higher QP = smaller file, lower quality.
       </p>
     </div>
   </div>
@@ -311,11 +315,17 @@
 </main>
 
 <script src="assets/nav.js"></script>
+<script src="assets/codec-demo.js"></script>
 <script>
 // === Video Codecs Course: Shared Elements ===
 
 document.addEventListener('DOMContentLoaded', () => {
   console.log('🎥 Video Codecs Course: Loaded!');
+  
+  // Pipeline quantization demo
+  if (typeof QuantDemo !== 'undefined') {
+    QuantDemo.init('pipeline-demo', 'pipeline-qp', 'pipeline-qp-display');
+  }
 });
 </script>
 </body>
