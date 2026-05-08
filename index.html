@@ -18,7 +18,7 @@
   .demo-video canvas {
     display: block;
     touch-action: manipulation;
-    height: 160px !important;
+    aspect-ratio: 440 / 160;
   }
   .frame-strip {
     display: flex;
@@ -180,7 +180,7 @@
     <div class="widget-header">🎥 Pipeline in Action: Quantization Effect</div>
     <div class="widget-body">
       <div class="demo-video">
-        <canvas id="pipeline-demo" width="440" height="160" style="width:100%;height:auto;"></canvas>
+        <canvas id="pipeline-demo" width="440" height="160" style="width:100%;min-height:120px;"></canvas>
       </div>
       <div class="widget-controls">
         <label>Quantization (QP):
