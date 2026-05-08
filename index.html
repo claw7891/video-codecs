@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video Codecs: From Why to Wow</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  /* Additional styles for video codecs course */
+  .demo-video {
+    width: 100%;
+    max-width: 480px;
+    height: 270px;
+    background: var(--bg-card);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    margin: 1rem auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+  .codec-comparison {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .codec-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1rem;
+    text-align: center;
+  }
+  .codec-card h3 {
+    color: var(--accent2);
+    margin-bottom: 0.5rem;
+  }
+  .bitrate-chart {
+    height: 200px;
+    background: var(--bg-accent);
+    border-radius: var(--radius-sm);
+    margin: 1rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+</style>
+</head>
+<body data-course="video-codecs">
+
+<!-- Navigation -->
+<nav class="top-nav">
+  <a href="index.html" class="nav-brand">
+    <span class="emoji">🎥</span> Video Codecs
+  </a>
+  <span class="nav-lesson">Course Overview</span>
+  <button class="menu-btn" aria-label="Lessons">☰</button>
+</nav>
+
+<!-- Lesson Drawer -->
+<div class="drawer-overlay"></div>
+<aside class="lesson-drawer">
+  <div class="drawer-header">
+    <h3>Course Syllabus</h3>
+    <button class="drawer-close">✕</button>
+  </div>
+  <ul class="lesson-list">
+    <li><a href="index.html"><span class="lesson-num">🏠</span>Home</a></li>
+    <li><a href="lesson1.html" class="active"><span class="lesson-num">01</span> How Video Codecs Work <span class="lesson-check" data-lesson="1">✓</span></a></li>
+    <li><a href="lesson2.html"><span class="lesson-num">02</span> Weaknesses of Existing Codecs <span class="lesson-check" data-lesson="2">✓</span></a></li>
+    <li><a href="lesson3.html"><span class="lesson-num">03</span> Hardware & Codec Interplay <span class="lesson-check" data-lesson="3">✓</span></a></li>
+    <li><a href="lesson4.html"><span class="lesson-num">04</span> Modern Codec Landscape <span class="lesson-check" data-lesson="4">✓</span></a></li>
+    <li><a href="lesson5.html"><span class="lesson-num">05</span> Licensing & Economics <span class="lesson-check" data-lesson="5">✓</span></a></li>
+    <li><a href="lesson6.html"><span class="lesson-num">06</span> Future Directions <span class="lesson-check" data-lesson="6">✓</span></a></li>
+  </ul>
+  <div class="progress-bar"><div class="progress-bar-fill" style="width:0%"></div></div>
+</aside>
+
+<!-- Main Content -->
+<main class="container">
+
+  <header class="lesson-header">
+    <div class="lesson-meta">Course Overview</div>
+    <h1>Video Codecs: From Why to Wow</h1>
+    <p class="lesson-subtitle">Understanding how video compression works, from fundamentals to future innovations</p>
+  </header>
+
+  <div class="story-hook">
+    Every time you stream a Netflix show, make a Zoom call, or watch a YouTube video, you're benefiting from one of the most impressive feats of engineering: video compression. But how can a 4K movie that would normally require terabytes of storage fit into a few gigabytes? Why does your video sometimes look blocky or blurry? And why are there so many different codecs like H.264, HEVC, and AV1? Let's dive into the fascinating world of video codecs and uncover the magic that makes modern video possible.
+  </div>
+
+  <div class="tldr">
+    <div class="tldr-label">TL;DR</div>
+    <p>Video codecs compress video by removing redundancy and irrelevancy, using techniques like temporal prediction, transform coding, and entropy encoding. Modern codecs balance compression efficiency, computational complexity, and licensing considerations. The landscape is evolving rapidly with royalty-free alternatives challenging established standards.</p>
+  </div>
+
+  <!-- SECTION 1: What Is Video Compression? -->
+  <h2>What Is Video Compression, Really?</h2>
+
+  <p>
+    Raw video is enormous. A single minute of uncompressed 1080p video at 30 frames per second requires approximately:
+  </p>
+
+  <ul class="content-list">
+    <li><strong>1080p (1920×1080)</strong>: ~165 MB per second</li>
+    <li><strong>4K (3840×2160)</strong>: ~660 MB per second</li>
+    <li><strong>8K (7680×4320)</strong>: ~2.6 GB per second</li>
+  </ul>
+
+  <p>
+    Without compression, streaming video over the internet would be impossible. Even storing a few hours of video would require massive storage systems. Video codecs solve this by exploiting two fundamental properties of video:
+  </p>
+
+  <div class="callout">
+    <strong>Spatial redundancy:</strong> Nearby pixels in a frame often have similar colors and brightness.<br>
+    <strong>Temporal redundancy:</strong> Consecutive frames are often very similar, with only small changes between them.
+  </div>
+
+  <p>
+    By recognizing and eliminating these redundancies, video codecs can achieve compression ratios of 100:1 or more while maintaining visually acceptable quality.
+  </p>
+
+  <!-- SECTION 2: How Video Codecs Work -->
+  <h2>The Video Codec Pipeline</h2>
+
+  <p>
+    Whether it's H.264, HEVC, AV1, or VVC, all modern video codecs follow a similar basic structure:
+  </p>
+
+  <ol class="content-list">
+    <li><strong>Partitioning:</strong> Divide frames into blocks (typically 4×4 to 64×64 pixels)</li>
+    <li><strong>Prediction:</strong> Predict block content from neighboring pixels (spatial) or previous/future frames (temporal)</li>
+    <li><strong>Transform:</strong> Convert prediction errors to frequency domain (usually DCT or similar)</li>
+    <li><strong>Quantization:</strong> Reduce precision of frequency coefficients (main source of compression)</li>
+    <li><strong>Entropy Coding:</strong> Losslessly compress the quantized coefficients (Huffman, arithmetic coding, etc.)</li>
+    <li><strong>Reconstruction:</strong> For feedback in prediction loop (inverse quant, inverse transform, add prediction)</li>
+  </ol>
+
+  <p>
+    Let's break down each stage with a simple example:
+  </p>
+
+  <div class="widget">
+    <div class="widget-header">🎥 Video Codec Pipeline Demo</div>
+    <div class="widget-body">
+      <div class="demo-video">
+        [Video compression visualization would go here]
+      </div>
+      <p style="font-size:0.8rem;color:var(--text-muted);text-align:center;margin-top:0.5rem;">
+        Each frame goes through prediction, transform, quantization, and encoding to achieve compression
+      </p>
+    </div>
+  </div>
+
+  <!-- SECTION 3: Key Frame Types -->
+  <h2>Key Frame Types: I, P, and B Frames</h2>
+
+  <p>
+    Video codecs use different types of frames to balance compression efficiency with random access and error resilience:
+  </p>
+
+  <ul class="content-list">
+    <li><strong>I-frames (Intra-coded):</strong> Encoded independently using only spatial information. Serve as random access points.</li>
+    <li><strong>P-frames (Predictive):</strong> Encoded using motion compensation from previous I or P frames.</li>
+    <li><strong>B-frames (Bidirectional):</strong> Encoded using motion compensation from both previous and future frames (highest compression).</li>
+  </ul>
+
+  <p>
+    A typical encoding sequence might look like: I B B P B B P B B P B B I ...
+    This structure provides excellent compression while allowing efficient seeking and error recovery.
+  </p>
+
+  <div class="widget">
+    <div class="widget-header">📊 Frame Type Comparison</div>
+    <div class="widget-body">
+      <div class="codec-comparison">
+        <div class="codec-card">
+          <h3>I-Frame</h3>
+          <p>Largest size</p>
+          <p>Random access</p>
+          <p>Reference for others</p>
+        </div>
+        <div class="codec-card">
+          <h3>P-Frame</h3>
+          <p>Medium size</p>
+          <p>Uses past frames</p>
+          <p>Good compression</p>
+        </div>
+        <div class="codec-card">
+          <h3>B-Frame</h3>
+          <p>Smallest size</p>
+          <p>Uses past & future</p>
+          <p>Best compression</p>
+        </div>
+      </div>
+      <p style="font-size:0.8rem;color:var(--text-muted);text-align:center;margin-top:0.5rem;">
+        Trade-off: B-frames compress best but require more memory and processing
+      </p>
+    </div>
+  </div>
+
+  <!-- SECTION 4: Motion Compensation -->
+  <h2>Motion Compensation: The Heart of Temporal Compression</h2>
+
+  <p>
+    The biggest gains in video compression come from <span class="key-term">motion compensation</span> – recognizing that objects in video move predictably from frame to frame.
+  </p>
+
+  <p>
+    Instead of encoding every pixel, the codec estimates how blocks of pixels have moved (motion vectors) and only encodes the difference between the predicted block and the actual content.
+  </p>
+
+  <div class="callout">
+    <strong>Example:</strong> If a soccer ball moves 10 pixels right and 2 pixels down between frames, instead of encoding the entire ball, we encode: "move this block by (+10, +2) and encode only the small difference."
+  </div>
+
+  <p>
+    Advanced codecs use increasingly sophisticated motion compensation:
+  </p>
+
+  <ul class="content-list">
+    <li><strong>Block sizes:</strong> From 4×4 to 64×64 pixels, with adaptive partitioning</li>
+    <li><strong>Fractional pixel accuracy:</strong> Quarter-pixel or eighth-pixel precision</li>
+    <li><strong>Multiple reference frames:</strong> Using more than just the previous frame for prediction</li>
+    <li><strong>Weighted prediction:</strong> Accounting for lighting changes and fade effects</li>
+  </ul>
+
+  <!-- SECTION 5: Transform Coding -->
+  <h2>Transform Coding: From Spatial to Frequency Domain</h2>
+
+  <p>
+    After motion compensation, we're left with <span class="key-term">prediction residuals</span> – the differences between predicted and actual pixel values. These residuals often have energy concentrated in low frequencies.
+  </p>
+
+  <p>
+    By applying a transform (typically Discrete Cosine Transform or similar), we convert spatial data to frequency data, making it easier to compress:
+  </p>
+
+  <div class="formula">
+    F(u,v) = (1/√(2N)) C(u) C(v) ΣΣ f(x,y) cos[((2x+1)uπ)/(2N)] cos[((2y+1)vπ)/(2N)]
+  </div>
+
+  <p>
+    Where C(u), C(v) are normalization factors, and f(x,y) is the spatial domain data.
+  </p>
+
+  <p>
+    The transform concentrates most of the signal energy into a few low-frequency coefficients, allowing us to aggressively quantize (reduce precision of) the high-frequency coefficients that contribute less to perceived quality.
+  </p>
+
+  <!-- SECTION 6: Quantization and Entropy Coding -->
+  <h2>Quantization: Where the Compression Happens</h2>
+
+  <p>
+    <span class="key-term">Quantization</span> is the primary lossy step in video compression. We reduce the precision of transform coefficients, typically by dividing them by a quantization step size and rounding to integers.
+  </p>
+
+  <p>
+    Higher quantization = more compression = more loss
+    Lower quantization = less compression = better quality
+  </p>
+
+  <p>
+    Modern codecs use adaptive quantization, allocating more bits to complex regions (edges, textures) and fewer bits to flat regions (sky, walls).
+  </p>
+
+  <p>
+    After quantization, we apply <span class="key-term">entropy coding</span> to losslessly compress the quantized coefficients and motion vectors:
+  </p>
+
+  <ul class="content-list">
+    <li><strong>CAVLC/CABAC (H.264):</strong> Context-adaptive binary arithmetic coding</li>
+    <li><strong>CABAC (HEVC):</strong> Improved arithmetic coding</li>
+    <li><strong>Tabaci (AV1):</strong> Adaptive binary arithmetic coding</li>
+    <li><strong>Exponential-Golomb/Rice:</strong> Simpler but less efficient methods</li>
+  </ul>
+
+  <!-- SECTION 7: Looking Ahead -->
+  <h2>What We'll Cover</h2>
+
+  <p>In this course, we'll explore:</p>
+
+  <ul class="content-list">
+    <li>The technical fundamentals of modern video codecs</li>
+    <li>Limitations and weaknesses of current approaches</li>
+    <li>How specialized hardware enables complex algorithms</li>
+    <li>The evolving landscape of competing standards</li>
+    <li>Licensing, royalties, and economic considerations</li>
+    <li>Emerging technologies and future directions</li>
+  </ul>
+
+  <h2>Ready to Begin?</h2>
+  <p>
+    Let's start with <strong>Lesson 1</strong>: a deep dive into how video codecs actually work, using H.264 as our primary example. We'll build up from first principles to understand why these algorithms look the way they do.
+  </p>
+
+  <!-- Completion -->
+  <div class="completion-box">
+    <span class="check-icon">✓</span>
+    <span class="check-text">Mark as complete</span>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="lesson-nav-bottom">
+    <a href="index.html" class="nav-btn">← Home</a>
+    <a href="lesson1.html" class="nav-btn next">Lesson 1 →</a>
+  </div>
+
+</main>
+
+<script src="assets/nav.js"></script>
+<script>
+// === Video Codecs Course: Shared Elements ===
+
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('🎥 Video Codecs Course: Loaded!');
+});
+</script>
+</body>
+</html>

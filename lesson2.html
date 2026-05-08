@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 2: Weaknesses of Existing Codecs - Video Codecs Course</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-lesson="2">
+
+<!-- Navigation -->
+<nav class="top-nav">
+  <a href="index.html" class="nav-brand">
+    <span class="emoji">🎥</span> Video Codecs
+  </a>
+  <span class="nav-lesson">Lesson 2: Weaknesses of Existing Codecs</span>
+  <button class="menu-btn" aria-label="Lessons">☰</button>
+</nav>
+
+<!-- Lesson Drawer -->
+<div class="drawer-overlay"></div>
+<aside class="lesson-drawer">
+  <div class="drawer-header">
+    <h3>Course Syllabus</h3>
+    <button class="drawer-close">✕</button>
+  </div>
+  <ul class="lesson-list">
+    <li><a href="index.html"><span class="lesson-num">🏠</span>Home</a></li>
+    <li><a href="lesson1.html"><span class="lesson-num">01</span> How Video Codecs Work <span class="lesson-check" data-lesson="1"></span></a></li>
+    <li><a href="lesson2.html" class="active"><span class="lesson-num">02</span> Weaknesses of Existing Codecs <span class="lesson-check" data-lesson="2"></span></a></li>
+    <li><a href="lesson3.html"><span class="lesson-num">03</span> Hardware & Codec Interplay <span class="lesson-check" data-lesson="3"></span></a></li>
+    <li><a href="lesson4.html"><span class="lesson-num">04</span> Modern Codec Landscape <span class="lesson-check" data-lesson="4"></span></a></li>
+    <li><a href="lesson5.html"><span class="lesson-num">05</span> Licensing & Economics <span class="lesson-check" data-lesson="5"></span></a></li>
+    <li><a href="lesson6.html"><span class="lesson-num">06</span> Future Directions <span class="lesson-check" data-lesson="6"></span></a></li>
+  </ul>
+  <div class="progress-bar"><div class="progress-bar-fill" style="width:0%"></div></div>
+</aside>
+
+<!-- Main Content -->
+<main class="container">
+
+  <header class="lesson-header">
+    <div class="lesson-meta">Lesson 2 of 6</div>
+    <h1>Weaknesses of Existing Codecs</h1>
+    <p class="lesson-subtitle">Blocking, ringing, banding, and the trade-offs we accept</p>
+  </header>
+
+  <div class="story-hook">
+    You've probably noticed it before: that strange grid-like pattern in dark scenes of a streaming movie, or the slight shimmer around sharp edges in a fast-moving sports broadcast. These aren't transmission errors – they're fundamental artifacts of how video codecs work. Every compression technique involves trade-offs, and understanding these limitations is key to appreciating why newer codecs keep emerging and why we can never quite eliminate all visual imperfections.
+  </div>
+
+  <div class="tldr">
+    <div class="tldr-label">TL;DR</div>
+    <p>All lossy video codecs produce characteristic artifacts due to block-based processing, quantization, and frequency domain transformations. These include blocking artifacts at boundaries, ringing (Gibbs phenomenon) around edges, banding in smooth gradients, detail loss from high-frequency removal, and color artifacts from chroma subsampling. Understanding these trade-offs helps explain codec design decisions and the ongoing evolution of compression standards.</p>
+  </div>
+
+  <!-- SECTION 1: Blocking Artifacts -->
+  <h2>1. Blocking Artifacts</h2>
+
+  <p>
+    The most recognizable artifact in compressed video is <span class="key-term">blocking</span> – visible boundaries between processing blocks that appear as a grid-like pattern, especially in flat or low-contrast areas.
+  </p>
+
+  <p>
+    Blocking occurs because modern codecs divide frames into blocks (typically 4×4 to 32×32 pixels) and process each block independently. When quantization is coarse (high QP values), each block gets quantized to slightly different values, creating discontinuous jumps at block boundaries.
+  </p>
+
+  <div class="callout-warn">
+    <strong>Why it happens:</strong> Block-based transform coding processes each block independently. At low bitrates, coarse quantization means adjacent blocks may have significantly different average values, creating visible seams.
+  </div>
+
+  <p>
+    Blocking is most noticeable in:
+  </p>
+  <ul class="content-list">
+    <li>Dark or shadow areas with limited color variation</li>
+    <li>Slow-moving or static scenes</li>
+    <li>Flat backgrounds like walls or skies</li>
+    <li>Low bitrate encodes (especially at high resolutions)</li>
+  </p>
+
+  <div class="experiment-callout">
+    Use the widget below to see how blocking increases with compression severity. Notice how the block boundaries become more pronounced as the quantization parameter increases.
+  </div>
+
+  <div class="widget">
+    <div class="widget-header">🔳 Blocking Artifact Demo</div>
+    <div class="widget-body">
+      <canvas id="artifact-canvas"></canvas>
+      <div class="widget-controls">
+        <div>
+          <label for="artifact-slider">Severity:</label>
+          <input type="range" id="artifact-slider" min="0" max="100" value="30">
+        </div>
+        <div>
+          <label for="artifact-type">Type:</label>
+          <select id="artifact-type">
+            <option value="blocking">Blocking</option>
+            <option value="ringing">Ringing</option>
+            <option value="banding">Banding</option>
+            <option value="blurring">Blurring</option>
+          </select>
+        </div>
+        <div>
+          <label for="artifact-display">Value:</label>
+          <div class="value-display" id="artifact-display">30</div>
+        </div>
+      </div>
+      <p class="widget-desc">
+        Adjust the slider to increase blocking severity. Try switching between artifact types to see how each manifests under compression.
+      </p>
+    </div>
+  </div>
+
+  <!-- SECTION 2: Ringing Artifacts (Gibbs Phenomenon) -->
+  <h2>2. Ringing Artifacts (Gibbs Phenomenon)</h2>
+
+  <p>
+    <span class="key-term">Ringing</span> appears as oscillating patterns or "halos" around sharp edges in the image, particularly noticeable around high-contrast transitions like text on backgrounds or object boundaries.
+  </p>
+
+  <p>
+    This artifact stems from the <span class="key-term">Gibbs phenomenon</span> in Fourier analysis: when we represent a discontinuous function (like a sharp edge) using a finite series of sinusoids (frequency components), we get overshoot and ringing near the discontinuity.
+  </p>
+
+  <p>
+    In video codecs, the Discrete Cosine Transform (DCT) represents image blocks as sums of cosine functions. When we quantize (especially aggressively), we lose some high-frequency components needed to accurately represent sharp edges, causing the reconstruction to overshoot and undershoot around edges.
+  </p>
+
+  <div class="callout-warn">
+    <strong>Why it happens:</strong> Quantization removes high-frequency DCT coefficients needed to represent sharp transitions. The reconstruction approximates the edge using fewer frequencies, causing oscillations (ringing) around the true edge position.
+  </div>
+
+  <p>
+    Ringing is particularly problematic with:
+  </p>
+  <ul class="content-list">
+    <li>Text and graphics overlays</li>
+    <li>Sharp object boundaries</li>
+    <li>High-contrast edges in scenes</li>
+    <li>Animated content with crisp lines</li>
+  </p>
+
+  <!-- SECTION 3: Banding / Contouring -->
+  <h2>3. Banding / Contouring</h2>
+
+  <p>
+    <span class="key-term">Banding</span> (also called contouring) appears as visible steps or bands in smooth gradients that should appear continuous, such as skies, walls, or gradual lighting transitions.
+  </p>
+
+  <p>
+    This occurs when quantization is too coarse in the DC (average) or low-frequency AC coefficients of the transform. Instead of smoothly varying pixel values, we get quantized levels that create visible bands.
+  </p>
+
+  <div class="callout-warn">
+    <strong>Why it happens:</strong> Human vision is extremely sensitive to gradual changes in smooth areas. When quantization step size exceeds our ability to discern subtle gradations, we perceive discrete steps instead of smooth transitions.
+  </div>
+
+  <p>
+    Banding is most visible in:
+  </p>
+  <ul class="content-list">
+    <li>Clear skies and smooth walls</li>
+    <li>Gradual lighting changes</li>
+    <li>Fog, haze, or atmospheric effects</li>
+    <li>Slow fades and dissolves</li>
+    <li>Any area with low spatial frequency content</li>
+  </p>
+
+  <!-- SECTION 4: Blurring / Detail Loss -->
+  <h2>4. Blurring / Detail Loss</h2>
+
+  <p>
+    <span class="key-term">Detail loss</span> or blurring occurs when high-frequency image details are removed during quantization, resulting in a softer, less sharp image.
+  </p>
+
+  <p>
+    High-frequency DCT coefficients represent fine details like texture, noise, and sharp edges. When these coefficients are quantized to zero (or near-zero), we lose this detail in the reconstructed image.
+  </p>
+
+  <p>
+    Unlike blocking or ringing which create artificial structures, detail loss removes real image information. The result is a plasticky or waxy appearance where fine textures and subtle variations disappear.
+  </p>
+
+  <div class="callout-info">
+    <strong>Trade-off consideration:</strong> Some degree of detail loss is often preferable to more objectionable artifacts like blocking or ringing, as it maintains overall image structure while reducing compression artifacts.
+  </div>
+
+  <!-- SECTION 5: Color Artifacts from Chroma Subsampling -->
+  <h2>5. Color Artifacts from Chroma Subsampling</h2>
+
+  <p>
+    Most video codecs use <span class="key-term">chroma subsampling</strong> to reduce color resolution while preserving full luminance (brightness) resolution, based on the fact that human vision is more sensitive to brightness changes than color changes.
+  </p>
+
+  <p>
+    Common subsampling formats include:
+  </p>
+  <ul class="content-list">
+    <li><strong>4:4:4:</strong> Full color resolution (no subsampling)</li>
+    <li><strong>4:2:2:</strong> Half horizontal color resolution</li>
+    <li><strong>4:2:0:</strong> Half horizontal and vertical color resolution (most common)</li>
+  </ul>
+
+  <p>
+    When chroma resolution is reduced, color edges can appear blurred or shifted relative to luminance edges, causing color fringing or bleeding, especially around sharp color transitions.
+  </p>
+
+  <div class="callout-warn">
+    <strong>Why it happens:</strong> Chroma subsampling reduces color resolution, so when reconstructing the image, color transitions become less sharp than brightness transitions, leading to misalignment between color and luminance edges.
+  </div>
+
+  <div class="experiment-callout">
+    Use the widget below to compare different chroma subsampling schemes. Notice how 4:2:0 shows more color bleeding around edges compared to 4:4:4, while requiring significantly less bandwidth.
+  </div>
+
+  <div class="widget">
+    <div class="widget-header">🎨 Chroma Subsampling Demo</div>
+    <div class="widget-body">
+      <canvas id="color-canvas"></canvas>
+      <div class="widget-controls">
+        <div>
+          <label for="subsampling-select">Subsampling:</label>
+          <select id="subsampling-select">
+            <option value="4:4:4">4:4:4 (Full)</option>
+            <option value="4:2:2">4:2:2 (½ horizontal)</option>
+            <option value="4:2:0" selected>4:2:0 (½ horiz + vert)</option>
+          </select>
+        </div>
+      </div>
+      <p class="widget-desc">
+        Compare how different chroma subsampling rates affect color resolution and bandwidth requirements. The 4:2:0 format is most common in streaming due to its 50% color data reduction with minimal visible impact in many scenes.
+      </p>
+    </div>
+  </div>
+
+  <!-- SECTION 6: Generational Loss -->
+  <h2>6. Generational Loss</h2>
+
+  <p>
+    <span class="key-term">Generational loss</span> occurs when video undergoes multiple encode-decode cycles, with each generation compounding the artifacts from the previous generation.
+  </p>
+
+  <p>
+    Unlike generational loss in analog systems (which degrades gradually), digital generational loss can be particularly problematic because:
+  </p>
+  <ul class="content-list">
+    <li>Each encode may make different quantization decisions</li>
+    <li>Different block boundaries may align differently</li>
+    <li>Motion compensation may propagate errors</li>
+    <li>Certain artifacts can become amplified over generations</li>
+  </ul>
+
+  <p>
+    This is why professional workflows prefer working with lossless or visually lossless intermediates, and why multiple compression steps (like capturing → editing → web delivery) should be minimized.
+  </p>
+
+  <div class="callout-info">
+    <strong>Real-world impact:</strong> User-generated content often suffers from generational loss as videos are downloaded, re-edited, and re-uploaded across platforms, each step potentially reducing quality further.
+  </div>
+
+  <!-- SECTION 7: Complexity Tradeoffs -->
+  <h2>7. Complexity Tradeoffs</h2>
+
+  <p>
+    There's an exponential relationship between compression efficiency and computational complexity. Achieving better compression often requires exponentially more processing power.
+  </p>
+
+  <p>
+    This explains why:
+  </p>
+  <ul class="content-list">
+    <li>Newer codecs like AV1 and VVC offer better compression but require more powerful hardware for encoding</li>
+    <li>Hardware acceleration becomes crucial for adopting newer standards</li>
+    <li>Real-time applications (video conferencing, live streaming) often use simpler codecs despite lower efficiency</li>
+    <li>Encoding complexity is often much higher than decoding complexity</li>
+  </p>
+
+  <p>
+    As a rule of thumb, each generation of codec that provides ~50% bitrate savings typically requires ~10x the computational complexity for encoding.
+  </p>
+
+  <!-- SECTION 8: Latency vs Compression -->
+  <h2>8. Latency vs Compression Tradeoffs</h2>
+
+  <p>
+    Different applications have different sensitivity to latency, creating another important trade-off axis in codec design and selection.
+  </p>
+
+  <p>
+    <strong>Low-latency requirements:</strong>
+  </p>
+  <ul class="content-list">
+    <li>Video conferencing (Zoom, Teams, Meet)</li>
+    <li>Live sports broadcasting</li>
+    <li>Gaming and cloud gaming</li>
+    <li>Real-time remote control systems</li>
+  </ul>
+
+  <p>
+    <strong>Higher latency tolerance:</strong>
+  </p>
+  <ul class="content-list">
+    <li>Streaming video (Netflix, YouTube, Hulu)</li>
+    <li>Video on demand services</li>
+    <li>File-based workflows</li>
+    <li>Archival and storage applications</li>
+  </p>
+
+  <p>
+    Codecs optimized for low latency often:
+  </p>
+  <ul class="content-list">
+    <li>Use smaller GOP structures or I-frame only encoding</li>
+    <li>Reduce motion search ranges</li>
+    <li>Limit reference frames</li>
+    <li>Use simpler entropy coding modes</li>
+  </p>
+
+  <div class="callout">
+    <strong>Example:</strong> A video conferencing codec might operate at 50-100ms end-to-end latency with moderate compression, while a streaming codec might use 2-5 second buffering for significantly better compression efficiency.
+  </div>
+
+  <!-- SECTION 9: Motion Estimation Failures -->
+  <h2>9. Motion Estimation Failures</h2>
+
+  <p>
+    Even the best motion estimation algorithms can fail under certain conditions, leading to specific artifacts that depend on how the codec handles prediction errors.
+  </p>
+
+  <p>
+    Common failure modes include:
+  </p>
+  <div class="content-list">
+    <li><strong>Fast motion:</strong> When objects move faster than the search range can accommodate</li>
+    <li><strong>Fades and dissolves:</strong> Global illumination changes that break pixel-value assumptions</li>
+    <li><strong>Scene cuts:</strong> Abrupt changes where previous frames provide no useful prediction</li>
+    <li><strong>Unusual motion patterns:</strong> Rotation, zooming, or complex deformations</li>
+    <li><strong>Small, high-contrast objects:</strong> Difficult to track reliably</li>
+  </div>
+
+  <p>
+    When motion estimation fails, the encoder must fall back to:
+  </p>
+  <ul class="content-list">
+    <li>Spatial prediction (intra-coding within the frame)</li>
+    <li>Larger quantization steps (more compression artifacts)</li>
+    <li>Intra refresh cycles (periodically rebuilding from key frames)</li>
+    <li>Error resilience modes (increasing overhead for robustness)</li>
+  </p>
+
+  <p>
+    This is why scenes with rapid action, quick cuts, or complex motion often show more visible artifacts than slow, predictable motion.
+  </p>
+
+  <!-- Completion -->
+  <div class="completion-box">
+    <span class="check-icon">○</span>
+    <span class="check-text">Mark as complete</span>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="lesson-nav-bottom">
+    <a href="lesson1.html" class="nav-btn prev">← Lesson 1</a>
+    <a href="lesson3.html" class="nav-btn next">Lesson 3 →</a>
+  </div>
+
+</main>
+
+<script src="assets/nav.js"></script>
+<script src="assets/codec-demo.js"></script>
+<script>
+// Initialize widgets for Lesson 2
+document.addEventListener('DOMContentLoaded', () => {
+  // Initialize artifact demo
+  window.ArtifactDemo.init('artifact-canvas', 'artifact-slider', 'artifact-type', 'artifact-display');
+  
+  // Initialize color space demo
+  window.ColorSpaceDemo.init('color-canvas', 'subsampling-select');
+  
+  console.log('🎥 Lesson 2: Weaknesses of Existing Codecs - Initialized!');
+});
+</script>
+</body>
+</html>

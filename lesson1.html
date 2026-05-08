@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Video Codecs Work - Video Codecs Course</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-lesson="1">
+
+<!-- Navigation -->
+<nav class="top-nav">
+  <a href="index.html" class="nav-brand">
+    <span class="emoji">🎥</span> Video Codecs
+  </a>
+  <span class="nav-lesson">Lesson 1: How Video Codecs Work</span>
+  <button class="menu-btn" aria-label="Lessons">☰</button>
+</nav>
+
+<!-- Lesson Drawer -->
+<div class="drawer-overlay"></div>
+<aside class="lesson-drawer">
+  <div class="drawer-header">
+    <h3>Course Syllabus</h3>
+    <button class="drawer-close">✕</button>
+  </div>
+  <ul class="lesson-list">
+    <li><a href="index.html"><span class="lesson-num">🏠</span>Home</a></li>
+    <li><a href="lesson1.html" class="active"><span class="lesson-num">01</span> How Video Codecs Work <span class="lesson-check" data-lesson="1">○</span></a></li>
+    <li><a href="lesson2.html"><span class="lesson-num">02</span> Weaknesses of Existing Codecs <span class="lesson-check" data-lesson="2">✓</span></a></li>
+    <li><a href="lesson3.html"><span class="lesson-num">03</span> Hardware & Codec Interplay <span class="lesson-check" data-lesson="3">✓</span></a></li>
+    <li><a href="lesson4.html"><span class="lesson-num">04</span> Modern Codec Landscape <span class="lesson-check" data-lesson="4">✓</span></a></li>
+    <li><a href="lesson5.html"><span class="lesson-num">05</span> Licensing & Economics <span class="lesson-check" data-lesson="5">✓</span></a></li>
+    <li><a href="lesson6.html"><span class="lesson-num">06</span> Future Directions <span class="lesson-check" data-lesson="6">✓</span></a></li>
+  </ul>
+  <div class="progress-bar"><div class="progress-bar-fill" style="width:16%"></div></div>
+</aside>
+
+<!-- Main Content -->
+<main class="container">
+
+  <header class="lesson-header">
+    <div class="lesson-meta">Lesson 1 of 6</div>
+    <h1>How Video Codecs Work</h1>
+    <p class="lesson-subtitle">From raw video to compressed stream - understanding the codec pipeline</p>
+  </header>
+
+  <div class="story-hook">
+    Imagine trying to stream the entire Lord of the Rings trilogy in uncompressed 4K quality. You'd need approximately <strong>1.3 terabytes</strong> of bandwidth - that's like trying to drink from a fire hose through a straw! Yet Netflix delivers this same content using only about <strong>20 gigabytes</strong>. This 65:1 compression ratio isn't magic - it's the result of sophisticated algorithms that exploit how humans perceive video and the inherent redundancies in visual data.
+  </div>
+
+  <div class="tldr">
+    <div class="tldr-label">TL;DR</div>
+    <p>Video codecs compress video by removing spatial and temporal redundancies through a pipeline of partitioning, prediction, transformation, quantization, and entropy coding. Understanding this pipeline reveals why modern codecs like H.264, HEVC, and AV1 achieve such impressive compression ratios while maintaining visual quality.</p>
+  </div>
+
+  <!-- SECTION 1: Raw Video Sizes -->
+  <h2>Raw Video Sizes: The Compression Challenge</h2>
+
+  <p>
+    Before we can appreciate compression, we need to understand just how large uncompressed video really is. Let's break down the numbers for common resolutions:
+  </p>
+
+  <ul class="content-list">
+    <li><strong>SD (640×480)</strong>: ~55 MB per second at 30 fps</li>
+    <li><strong>HD (1280×720)</strong>: ~221 MB per second at 30 fps</li>
+    <li><strong>Full HD (1920×1080)</strong>: ~497 MB per second at 30 fps</li>
+    <li><strong>4K UHD (3840×2160)</strong>: ~1.99 GB per second at 30 fps</li>
+    <li><strong>8K UHD (7680×4320)</strong>: ~7.95 GB per second at 30 fps</li>
+  </ul>
+
+  <p>
+    These numbers assume 8-bit color depth (3 bytes per pixel). Professional video often uses 10-bit or 12-bit depth, making these sizes even larger. At these bitrates, even a short video would be impractical to store or transmit without compression.
+  </p>
+
+  <div class="callout-info">
+    <strong>Fun fact:</strong> A 2-hour movie in uncompressed 8K would require over 57 terabytes of storage - roughly equivalent to 14,000 DVDs or 280 Blu-ray discs!
+  </div>
+
+  <!-- SECTION 2: Codec Pipeline Overview -->
+  <h2>The Video Codec Pipeline: Six Stages of Compression</h2>
+
+  <p>
+    Whether it's H.264 from 2003 or the latest AV1 codec, all modern video codecs follow essentially the same six-stage pipeline. Each stage serves a specific purpose in reducing redundancy while preserving perceptual quality:
+  </p>
+
+  <ol class="content-list">
+    <li><strong>Partitioning:</strong> Divide frames into blocks for localized processing</li>
+    <li><strong>Prediction:</strong> Estimate block content to reduce what needs encoding</li>
+    <li><strong>Transform:</strong> Convert residual data to frequency domain</li>
+    <li><strong>Quantization:</strong> Reduce precision of transform coefficients (main lossy step)</li>
+    <li><strong>Entropy Coding:</strong> Losslessly compress the quantized data</li>
+    <li><strong>Reconstruction:</strong> Rebuild frames for use in prediction (feedback loop)</li>
+  </ol>
+
+  <p>
+    Let's walk through each stage with a simple 8×8 pixel block example:
+  </p>
+
+  <!-- Widget: Partitioning Demo -->
+  <div class="widget">
+    <div class="widget-header">🔲 Stage 1: Partitioning</div>
+    <div class="widget-body">
+      <div style="text-align:center; margin-bottom:0.8rem;">
+        <canvas id="partition-demo" width="200" height="200"></canvas>
+      </div>
+      <div class="widget-controls">
+        <label>Partition depth:
+          <input type="range" id="partition-slider" min="0" max="3" value="2">
+          <span class="value-display" id="partition-display">2</span>
+        </label>
+      </div>
+      <p class="widget-desc">
+        Modern codecs use quadtree partitioning to adapt block sizes to content complexity. Simple areas use large blocks; detailed areas use small blocks.
+      </p>
+    </div>
+  </div>
+
+  <!-- Widget: Prediction Demo (Motion Vectors) -->
+  <div class="widget">
+    <div class="widget-header">➡️ Stage 2: Prediction</div>
+    <div class="widget-body">
+      <div style="text-align:center; margin-bottom:0.8rem;">
+        <canvas id="motion-demo" width="280" height="200"></canvas>
+      </div>
+      <p class="widget-desc">
+        Instead of encoding every pixel, we encode motion vectors that describe how blocks move between frames, plus the small prediction error (residual).
+      </p>
+    </div>
+  </div>
+
+  <!-- Widget: Transform Demo (DCT) -->
+  <div class="widget">
+    <div class="widget-header">📊 Stage 3: Transform (DCT)</div>
+    <div class="widget-body">
+      <div style="text-align:center; margin-bottom:0.8rem;">
+        <canvas id="dct-demo" width="200" height="200"></canvas>
+      </div>
+      <div class="widget-controls">
+        <label>Frequency (u,v):
+          <select id="dct-u">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3" selected>3</option>
+          </select>
+          <select id="dct-v">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3" selected>3</option>
+          </select>
+        </label>
+      </div>
+      <p class="widget-desc">
+        The Discrete Cosine Transform converts spatial pixel data into frequency coefficients. Most visual information is concentrated in low-frequency coefficients (top-left), allowing aggressive compression of high-frequency details.
+      </p>
+    </div>
+  </div>
+
+  <!-- Widget: Quantization Demo -->
+  <div class="widget">
+    <div class="widget-header">🔢 Stage 4: Quantization</div>
+    <div class="widget-body">
+      <div style="text-align:center; margin-bottom:0.8rem;">
+        <canvas id="quant-demo" width="280" height="180"></canvas>
+      </div>
+      <div class="widget-controls">
+        <label>QP (Quantization Parameter):
+          <input type="range" id="quant-slider" min="1" max="51" value="25">
+          <span class="value-display" id="quant-display">25</span>
+        </label>
+      </div>
+      <p class="widget-desc">
+        Quantization reduces the precision of transform coefficients. Higher QP values mean more compression but more visible artifacts. This is the primary lossy step in video compression.
+      </p>
+    </div>
+  </div>
+
+  <!-- SECTION 3: I/P/B Frame Types -->
+  <h2>Frame Types: I, P, and B Frames Explained</h2>
+
+  <p>
+    Video codecs use different frame types to balance compression efficiency with random access and error resilience. Understanding these frame types is key to understanding video streaming and video conferencing trade-offs.
+  </p>
+
+  <div class="content-list">
+    <li><strong>I-frames (Intra-coded):</strong> Encoded independently using only spatial information from within the same frame. Serve as random access points and reference for other frames. Largest size but most resilient.</li>
+    <li><strong>P-frames (Predictive):</strong> Encoded using motion compensation from previous I or P frames. Medium size, good compression, require previous frame for decoding.</li>
+    <li><strong>B-frames (Bidirectional):</strong> Encoded using motion compensation from both previous and future frames. Smallest size, best compression, but require both directions for decoding and increase latency.</li>
+  </div>
+
+  <p>
+    A typical encoding sequence for streaming might look like: I B B P B B P B B P B B I ...
+    This provides excellent compression while allowing efficient seeking (go to any I-frame) and error recovery (loss of a frame doesn't propagate infinitely).
+  </p>
+
+  <div class="callout">
+    <strong>Trade-off:</strong> B-frames compress best (~50% smaller than P-frames) but require more memory (to store future frames) and processing (more complex motion compensation).
+  </div>
+
+  <!-- Widget: GOP Structure Demo -->
+  <div class="widget">
+    <div class="widget-header">📼 GOP (Group of Pictures) Structure</div>
+    <div class="widget-body">
+      <div style="text-align:center; margin-bottom:0.8rem;">
+        <canvas id="gop-demo" width="300" height="120"></canvas>
+      </div>
+      <div class="widget-controls">
+        <label>GOP size:
+          <input type="range" id="gop-slider" min="8" max="32" value="12">
+          <span class="value-display" id="gop-display">12</span>
+        </label>
+      </div>
+      <p class="widget-desc">
+        The GOP structure defines the pattern of I, P, and B frames. Smaller GOPs improve seeking and error resilience but reduce compression efficiency. Larger GOPs increase compression but make seeking slower and error propagation worse.
+      </p>
+    </div>
+  </div>
+
+  <!-- SECTION 4: Motion Compensation Deep Dive -->
+  <h2>Motion Compensation: Beyond Simple Block Matching</h2>
+
+  <p>
+    Early motion compensation used simple block matching with integer pixel precision. Modern codecs use sophisticated techniques that significantly improve compression efficiency:
+  </p>
+
+  <ul class="content-list">
+    <li><strong>Variable block sizes:</strong> From 4×4 to 64×64 partitions, adapting to content</li>
+    <li><strong>Fractional pixel accuracy:</strong> Quarter-pixel (H.264) or eighth-pixel (HEVC/AV1) precision</li>
+    <li><strong>Multiple reference frames:</strong> Using more than just the previous frame</li>
+    <li><strong>Weighted prediction:</strong> Accounting for lighting changes and fade effects</li>
+    <li><strong>Motion vector prediction:</strong> Predicting motion vectors from neighboring blocks</li>
+  </ul>
+
+  <div class="callout-warn">
+    <strong>Common misconception:</strong> Motion compensation doesn't track objects - it tracks pixel blocks. A person walking might be represented by dozens of different motion vectors as their clothing, limbs, and background move differently.
+  </div>
+
+  <!-- SECTION 5: Transform Coding Details -->
+  <h2>Transform Coding: Why DCT Works So Well</h2>
+
+  <p>
+    After motion compensation, we're left with prediction residuals - the differences between predicted and actual pixel values. These residuals often have special properties that make them ideal for transform coding:
+  </p>
+
+  <p>
+    <strong>Energy compaction:</strong> Most of the signal energy is concentrated in a few low-frequency coefficients. This lets us aggressively quantize (reduce precision of) high-frequency coefficients that contribute less to perceived quality.
+  </p>
+
+  <div class="formula">
+    F(u,v) = α(u)α(v) Σ Σ f(x,y) cos[((2x+1)uπ)/(2N)] cos[((2y+1)vπ)/(2N)]
+  </div>
+
+  <p>
+    Where α(0) = 1/√(2N) and α(u) = 1/√N for u > 0, and f(x,y) is the input block.
+  </p>
+
+  <p>
+    The DCT is particularly effective because it approximates the Karhunen-Loève Transform (KLT) for first-order Markov processes, which closely models the correlation in natural image data.
+  </p>
+
+  <!-- SECTION 6: Quantization and Entropy Coding -->
+  <h2>Quantization: Where the Bits Are Saved</h2>
+
+  <p>
+    <span class="key-term">Quantization</span> is where the actual compression happens. We reduce the precision of transform coefficients by dividing them by a quantization step size and rounding to integers:
+  </p>
+
+  <div class="formula">
+    Q(u,v) = round( F(u,v) / QStep(u,v) )
+  </div>
+
+  <p>
+    Where QStep(u,v) comes from a quantization matrix that can be adjusted based on perceptual importance (humans are less sensitive to high-frequency loss).
+  </p>
+
+  <p>
+    Higher quantization = more compression = more loss
+    Lower quantization = less compression = better quality
+  </p>
+
+  <p>
+    Modern codecs use adaptive quantization, allocating more bits to complex regions (edges, textures) and fewer bits to flat regions (sky, walls) based on psychovisual models of human perception.
+  </p>
+
+  <p>
+    After quantization, we apply entropy coding to losslessly compress the quantized coefficients:
+  </p>
+
+  <ul class="content-list">
+    <li><strong>H.264/AVC:</strong> CAVLC (Context-Adaptive Variable Length Coding) or CABAC (Context-Adaptive Binary Arithmetic Coding)</li>
+    <li><strong>HEVC/H.265:</strong> CABAC with improved context modeling</li>
+    <li><strong>AV1:</strong> Tabaci range coder (adaptive binary arithmetic coding)</li>
+    <li><strong>VVC/H.266:</strong> Enhanced CABAC with partition modeling</li>
+  </ul>
+
+  <div class="experiment-callout">
+    Try adjusting the quantization slider above to see how increasing QP reduces the number of non-zero coefficients (shown in the quantization demo) while increasing visible artifacts.
+  </div>
+
+  <!-- SECTION 7: In-Loop Filtering -->
+  <h2>In-Loop Filtering: Closing the Quality Gap</h2>
+
+  <p>
+    Quantization introduces artifacts, particularly at block boundaries. To prevent these artifacts from propagating and accumulating through frames (via the prediction loop), modern codecs apply in-loop filtering:
+  </p>
+
+  <ul class="content-list">
+    <li><strong>Deblocking filter:</strong> Reduces blocking artifacts at block boundaries</li>
+    <li><strong>Sample Adaptive Offset (SAO):</strong> HEVC/VVC feature that reduces banding and ringing</li>
+    <li><strong>Adaptive Loop Filter (ALF):</strong> HEVC/VVC feature that adapts to local image statistics</li>
+  </p>
+
+  <p>
+    These filters are applied during reconstruction, so their effects are included in the reference frames used for prediction - preventing error propagation.
+  </p>
+
+  <!-- Widget: In-Loop Filter Demo -->
+  <div class="widget">
+    <div class="widget-header">🧹 In-Loop Filtering: Deblocking Example</div>
+    <div class="widget-body">
+      <div style="text-align:center; margin-bottom:0.8rem;">
+        <canvas id="filter-demo" width="260" height="120"></canvas>
+      </div>
+      <div class="widget-controls">
+        <label>Filter strength:
+          <input type="range" id="filter-slider" min="0" max="100" value="50">
+          <span class="value-display" id="filter-display">50</span>
+        </label>
+      </div>
+      <p class="widget-desc">
+        The deblocking filter smooths sharp transitions at block boundaries while preserving genuine edges. Too little filtering leaves visible blocks; too much filtering blurs the image.
+      </p>
+    </div>
+  </div>
+
+  <!-- SECTION 8: Putting It All Together -->
+  <h2>From Concepts to Real Codecs</h2>
+
+  <p>
+    Understanding the pipeline helps explain why different codecs make different trade-offs:
+  </p>
+
+  <div class="callout-info">
+    <strong>H.264/AVC (2003):</strong> Established the modern hybrid codec paradigm. Good balance of complexity and efficiency. Still widely used for compatibility.
+  </div>
+
+  <div class="callout-info">
+    <strong>HEVC/H.265 (2013):</strong> ~50% better compression than H.264 at cost of increased complexity. Introduced CTUs (64×64), improved motion compensation, and better transforms.
+  </div>
+
+  <div class="callout-info">
+    <strong>AV1 (2018):</strong> Royalty-free alternative achieving HEVC-like efficiency. More complex encoding but better parallelism and open licensing.
+  </div>
+
+  <p>
+    The choice of codec often comes down to:
+  </p>
+
+  <ul class="content-list">
+    <li><strong>Compatibility:</strong> Will your target devices support it?</li>
+    <li><strong>Complexity:</strong> Do you have the encoding/decoding power available?</li>
+    <li><strong>Licensing:</strong> Are you prepared to pay royalties or deal with patent licensing?</li>
+    <li><strong>Encoding time:</strong> Is this live streaming (fast encoding needed) or video on demand (can encode slowly)?</li>
+  </p>
+
+  <!-- Completion -->
+  <div class="completion-box">
+    <span class="check-icon">○</span>
+    <span class="check-text">Mark as complete</span>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="lesson-nav-bottom">
+    <a href="index.html" class="nav-btn">← Home</a>
+    <a href="lesson2.html" class="nav-btn next">Lesson 2 →</a>
+  </div>
+
+</main>
+
+<script src="assets/nav.js"></script>
+<script src="assets/codec-demo.js"></script>
+<script>
+// === Lesson 1: Initialize Widgets ===
+
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('🎥 Lesson 1: How Video Codecs Work - Initializing widgets...');
+  
+  // Initialize all the widgets for this lesson
+  if (typeof PartitionDemo !== 'undefined') {
+    PartitionDemo.init('partition-demo', 'partition-slider', 'partition-display');
+  }
+  
+  if (typeof MotionVectorDemo !== 'undefined') {
+    MotionVectorDemo.init('motion-demo', 'state-demo'); // Using state-demo as dummy for second param
+  }
+  
+  if (typeof DCTDemo !== 'undefined') {
+    // Initialize DCT basis visualization
+    DCTDemo.drawBasis('dct-demo', 3, 3);
+    
+    // Add event listeners for DCT controls
+    const uSelect = document.getElementById('dct-u');
+    const vSelect = document.getElementById('dct-v');
+    const dctCanvas = document.getElementById('dct-demo');
+    
+    function updateDCT() {
+      const u = parseInt(uSelect.value);
+      const v = parseInt(vSelect.value);
+      DCTDemo.drawBasis('dct-demo', u, v);
+    }
+    
+    uSelect.addEventListener('change', updateDCT);
+    vSelect.addEventListener('change', updateDCT);
+  }
+  
+  if (typeof QuantDemo !== 'undefined') {
+    QuantDemo.init('quant-demo', 'quant-slider', 'quant-display');
+  }
+  
+  if (typeof GOPDemo !== 'undefined') {
+    GOPDemo.init('gop-demo', 'gop-slider', 'gop-display');
+  }
+  
+  if (typeof FilterDemo !== 'undefined') {
+    FilterDemo.init('filter-demo', 'filter-slider', 'filter-display');
+  }
+  
+  console.log('✅ Lesson 1 widgets initialized!');
+});
+
+// Handle canvas resize events
+document.addEventListener('canvas-resize', function() {
+  // Reinitialize widgets on resize if needed
+  console.log('📐 Canvas resize detected');
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 4 — Modern Codec Landscape | Video Codecs</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-lesson="4">
+
+<!-- Navigation -->
+<nav class="top-nav">
+  <a href="index.html" class="nav-brand">
+    <span class="emoji">🎥</span> Video Codecs
+  </a>
+  <span class="nav-lesson">Lesson 4 · Modern Codec Landscape</span>
+  <button class="menu-btn" aria-label="Lessons">☰</button>
+</nav>
+
+<!-- Lesson Drawer -->
+<div class="drawer-overlay"></div>
+<aside class="lesson-drawer">
+  <div class="drawer-header">
+    <h3>Course Syllabus</h3>
+    <button class="drawer-close">✕</button>
+  </div>
+  <ul class="lesson-list">
+    <li><a href="index.html"><span class="lesson-num">🏠</span>Home</a></li>
+    <li><a href="lesson1.html"><span class="lesson-num">01</span> How Video Codecs Work <span class="lesson-check" data-lesson="1">✓</span></a></li>
+    <li><a href="lesson2.html"><span class="lesson-num">02</span> Weaknesses of Existing Codecs <span class="lesson-check" data-lesson="2">✓</span></a></li>
+    <li><a href="lesson3.html"><span class="lesson-num">03</span> Hardware &amp; Codec Interplay <span class="lesson-check" data-lesson="3">✓</span></a></li>
+    <li><a href="lesson4.html" class="active"><span class="lesson-num">04</span> Modern Codec Landscape <span class="lesson-check" data-lesson="4">✓</span></a></li>
+    <li><a href="lesson5.html"><span class="lesson-num">05</span> Licensing &amp; Economics <span class="lesson-check" data-lesson="5">✓</span></a></li>
+    <li><a href="lesson6.html"><span class="lesson-num">06</span> Future Directions <span class="lesson-check" data-lesson="6">✓</span></a></li>
+  </ul>
+  <div class="progress-bar"><div class="progress-bar-fill" style="width:0%"></div></div>
+</aside>
+
+<!-- Main Content -->
+<main class="container">
+
+  <header class="lesson-header">
+    <div class="lesson-meta">Lesson 4</div>
+    <h1>Modern Codec Landscape</h1>
+    <p class="lesson-subtitle">H.264, HEVC, AV1, VVC — a tour of the battlefield</p>
+  </header>
+
+  <div class="story-hook">
+    In 2010, the world decided to standardise on H.264. Every phone, every browser, every camera — one codec to rule them all. Then someone figured out patent pools, and the royal road turned into a minefield. Today, we have <em>at least eight</em> major codec standards competing for your screen, each backed by a different coalition of tech giants, each claiming 30–50% better compression than the last. It's a standards war — but the real battlefield isn't technology, it's <em>licensing</em>.
+  </div>
+
+  <div class="tldr">
+    <div class="tldr-label">TL;DR</div>
+    <p>The codec landscape fractured after H.264's patent-encumbered success. HEVC delivered real improvements but licensing chaos blocked adoption. VP9 and AV1 emerged as royalty-free alternatives from the web giants. VVC pushes compression further but repeats the same licensing mistakes. The market is now permanently fragmented: no single codec will ever again rule them all.</p>
+  </div>
+
+  <!-- SECTION 1: A Brief History -->
+  <h2>A Brief History of Video Coding Standards</h2>
+
+  <p>Video compression standards didn't spring from nowhere. Each generation built on the last, and the choices made decades ago still constrain what's possible today.</p>
+
+  <ul class="content-list">
+    <li><strong>H.261 (1988)</strong> — The first practical video coding standard. Designed for ISDN videoconferencing at p×64 kbit/s. Introduced the hybrid block-based coding paradigm (motion-compensated prediction + DCT) that all modern codecs still use.</li>
+    <li><strong>MPEG-1 (1993)</strong> — Brought video to CD-ROM. Gave us the ubiquitous MP3 audio layer and grainy 352×240 video. First to standardise B-frames.</li>
+    <li><strong>MPEG-2 / H.262 (1995)</strong> — The DVD and digital TV standard. Supported interlaced video, higher resolutions, and scalable profiles. Still in active broadcast use today — nearly 30 years later.</li>
+    <li><strong>H.263 (1996)</strong> — Improved low-bitrate coding for videoconferencing. Introduced half-pixel motion compensation that became foundational.</li>
+    <li><strong>MPEG-4 Part 2 (1999)</strong> — The first "internet video" standard. DivX and XviD showed the world what was possible, but the standard itself was a compromise.</li>
+  </ul>
+
+  <div class="callout-info">
+    <strong>Key insight:</strong> Every major codec innovation in the last 35 years rests on the same foundation laid by H.261: <em>block-based motion compensation + transform coding + entropy coding</em>. The improvements are evolutionary — bigger blocks, smarter prediction, better entropy — not revolutionary.
+  </div>
+
+  <!-- SECTION 2: H.264/AVC -->
+  <h2>H.264 / AVC — The Undisputed King</h2>
+
+  <p><span class="key-term">H.264 (2003)</span>, also known as MPEG-4 Part 10 or AVC (Advanced Video Coding), is the most successful video codec in history. It is the default video format for Blu-ray, YouTube, Netflix, Zoom, FaceTime, and virtually every surveillance camera manufactured in the last 15 years.</p>
+
+  <p>What made H.264 revolutionary:</p>
+
+  <ul class="content-list">
+    <li><strong>Variable block sizes</strong> — 16×16 down to 4×4, enabling adaptive partitioning</li>
+    <li><strong>Multiple reference frames</strong> — Up to 16 frames for prediction (vs. just one in MPEG-2)</li>
+    <li><strong>Quarter-pixel motion</strong> — Much finer motion estimation than half-pixel predecessors</li>
+    <li><strong>CABAC entropy coding</strong> — Context-adaptive binary arithmetic coding for ~10% better compression over CAVLC</li>
+    <li><strong>In-loop deblocking filter</strong> — Reduced blocking artifacts within the coding loop</li>
+  </ul>
+
+  <div class="callout">
+    <strong>Profiles:</strong> H.264 defined <em>Baseline</em> (videoconferencing, low power), <em>Main</em> (broadcast), and <em>High</em> (Blu-ray, highest quality). This profile system let hardware scale from phones to cinema.
+  </div>
+
+  <p>H.264 delivered roughly <strong>50% bitrate reduction</strong> over MPEG-2 at the same quality. Combined with widespread hardware support in GPUs, SoCs, and FPGAs, it became the universal bridging format — the codec you can safely assume any device can decode.</p>
+
+  <!-- SECTION 3: H.265/HEVC -->
+  <h2>H.265 / HEVC — Great Codec, Terrible Politics</h2>
+
+  <p><span class="key-term">H.265 (2013)</span>, or HEVC (High Efficiency Video Coding), is what happens when engineers design an almost perfect successor and patent holders proceed to ruin it. Technically, HEVC delivers roughly <strong>50% bitrate reduction</strong> over H.264 at the same quality. But the story of its adoption is a case study in how <em>not</em> to standardise technology.</p>
+
+  <p>Key technical improvements:</p>
+
+  <ul class="content-list">
+    <li><strong>Coding Tree Units (CTUs)</strong> — Replaced fixed 16×16 macroblocks with a tree structure supporting blocks up to 64×64</li>
+    <li><strong>35 intra-prediction modes</strong> — Up from 9 in H.264, providing much more accurate spatial prediction</li>
+    <li><strong>Sample Adaptive Offset (SAO)</strong> — Improved in-loop filtering beyond the deblocking filter</li>
+    <li><strong>Parallel processing tools</strong> — Tiles, wavefront parallel processing, and slice segmentation for multi-core decoding</li>
+    <li><strong>Improved CABAC</strong> — Higher throughput entropy coding</li>
+  </ul>
+
+  <div class="callout-warn">
+    <strong>Licensing disaster:</strong> HEVC is covered by <em>three separate patent pools</em> (MPEG LA, HEVC Advance, Velos Media) plus many licensors operating outside those pools. Royalties can stack to several dollars per device, far exceeding any reasonable expectation for a video standard. This created a decade-long adoption freeze.
+  </div>
+
+  <p>The result? HEVC has strong adoption in <strong>4K Blu-ray</strong> (mandated by the spec), <strong>Apple devices</strong> (Apple pays the toll), and some streaming services for 4K content. But it never achieved the universal dominance of H.264 — and likely never will.</p>
+
+  <!-- SECTION 4: VP9 -->
+  <h2>VP9 — Google's Royalty-Free Answer</h2>
+
+  <p>While HEVC was floundering in patent politics, <span class="key-term">VP9</span> (2013) emerged from Google as a practical, royalty-free alternative. Developed from the earlier VP8 (acquired via On2 Technologies), VP9 targeted the same compression efficiency as HEVC but with a much simpler licensing story.</p>
+
+  <p>VP9's key advantages:</p>
+
+  <ul class="content-list">
+    <li><strong>Royalty-free</strong> — Google grants a perpetual, irrevocable patent license to anyone implementing the standard</li>
+    <li><strong>~35% bitrate savings</strong> over H.264 — competitive with HEVC on most content</li>
+    <li><strong>Ultra HD support</strong> — 8K and beyond, with 10- and 12-bit color depth</li>
+    <li><strong>Hardware decode</strong> in virtually all modern GPUs and SoCs (NVIDIA, AMD, Intel, Apple, Qualcomm, Samsung)</li>
+    <li><strong>YouTube's primary codec</strong> — Google's massive infrastructure runs on VP9 for all non-AV1 streams</li>
+  </ul>
+
+  <div class="callout-info">
+    <strong>Adoption reality:</strong> VP9 dominates on YouTube and has good browser support (Chrome, Firefox, Opera, Edge) but is absent from Apple's Safari. This creates a split: VP9 for the open web, H.264/HEVC for the Apple ecosystem. No single codec works universally.
+  </div>
+
+  <!-- SECTION 5: AV1 -->
+  <h2>AV1 — The Alliance Strikes Back</h2>
+
+  <p><span class="key-term">AV1</span> (2018) is the codec equivalent of the Avengers assembling. Faced with the HEVC licensing catastrophe, a consortium of tech giants formed the <strong>Alliance for Open Media</strong> (AOMedia) to build a next-generation, royalty-free codec from the ground up.</p>
+
+  <p>The founding members read like a who's-who of the internet: <strong>Google</strong>, <strong>Apple</strong>, <strong>Netflix</strong>, <strong>Meta</strong>, <strong>Microsoft</strong>, <strong>Amazon</strong>, <strong>Mozilla</strong>, <strong>NVIDIA</strong>, <strong>Intel</strong>, <strong>AMD</strong>, <strong>Samsung</strong>, <strong>TENCENT</strong>, and <strong>ARM</strong>. When these players agree on royalty-free video, the industry listens.</p>
+
+  <p>AV1's technical innovations:</p>
+
+  <ul class="content-list">
+    <li><strong>Block partitioning</strong> — Up to 128×128 blocks with recursive quad-tree and binary-tree subdivision (much more flexible than HEVC)</li>
+    <li><strong>56 intra-prediction modes</strong> — Including directional, smooth, and Paeth (derived from VP9)</li>
+    <li><strong>Warped motion</strong> — Affine motion compensation for rotations, zooms, and perspective changes</li>
+    <li><strong>Compound prediction</strong> — Weighted averaging from two reference frames simultaneously</li>
+    <li><strong>Global motion</strong> — Camera pan/zoom modelled as a single warp parameter shared across the frame</li>
+    <li><strong>CDEF and Loop Restoration</strong> — Advanced in-loop filters including constrained directional enhancement and wiener/SGR restoration</li>
+    <li><strong>Film grain synthesis</strong> — Parameterized grain model sent as metadata instead of encoding noisy grain at high bitrate</li>
+  </ul>
+
+  <p>AV1 typically delivers <strong>~30% bitrate reduction</strong> over HEVC and <strong>~50% over H.264</strong> at the same quality. The trade-off: encoding complexity is 3–5× higher than HEVC, making software encoding slow and hardware encoders still maturing.</p>
+
+  <div class="callout-warn">
+    <strong>Reality check:</strong> AV1 software encoding (libaom) is extremely slow. A 4K movie can take days to encode on a high-end CPU. Hardware encoders from NVIDIA (RTX 40-series), Intel (Arc), and Apple (M3+) are catching up, but quality still lags software encoders.
+  </div>
+
+  <!-- SECTION 6: AV2 -->
+  <h2>AV2 — Next-Gen, Under Development</h2>
+
+  <p><span class="key-term">AV2</span> is the <em>next</em> generation from the Alliance for Open Media, currently under active development. Early drafts target <strong>30% bitrate reduction over AV1</strong> — a goal that would make AV2 roughly 60–65% more efficient than H.264.</p>
+
+  <p>Key experimental tools under consideration:</p>
+
+  <ul class="content-list">
+    <li><strong>Neural network-based coding tools</strong> — In-loop neural filters, learned entropy models</li>
+    <li><strong>Extended block geometry</strong> — Improved rectangular and non-rectangular partitioning</li>
+    <li><strong>Advanced motion tools</strong> — Optical-flow-based prediction, extended warped motion</li>
+    <li><strong>Increased transform sizes</strong> — 128×128 transforms for flat regions</li>
+    <li><strong>Improved palette mode</strong> — Better screen content coding (screen sharing, text overlays)</li>
+  </ul>
+
+  <div class="callout-info">
+    <strong>Timeline:</strong> AV2 is expected to reach bitstream freeze around 2026–2027, with hardware implementations following 1–2 years later. Like AV1, it will be royalty-free and governed by AOMedia's defensive patent license.
+  </div>
+
+  <!-- SECTION 7: H.266/VVC -->
+  <h2>H.266 / VVC — The Technical Pinnacle</h2>
+
+  <p><span class="key-term">H.266 (2020)</span>, or VVC (Versatile Video Coding), represents the latest joint standard from MPEG and ITU. It achieves the <strong>highest compression efficiency</strong> of any standardized codec — roughly <strong>30–40% better than HEVC</strong> and <strong>60–70% better than H.264</strong>.</p>
+
+  <p>VVC's technical advances:</p>
+
+  <ul class="content-list">
+    <li><strong>CTU size up to 128×128</strong> — With more flexible quadtree with nested multi-type tree (QTMT)</li>
+    <li><strong>67 intra-prediction modes</strong> — Including wide-angle modes for rectangular blocks</li>
+    <li><strong>Multiple Transform Selection (MTS)</strong> — Choosing between DCT-II, DST-VII, DCT-VIII per block</li>
+    <li><strong>Low-Frequency Non-Separable Transform (LFNST)</strong> — Secondary transform for better energy compaction</li>
+    <li><strong>Adaptive Loop Filter (ALF)</strong> — Wiener-based filter that adapts per frame</li>
+    <li><strong>Decoder-side motion refinement</strong> — Subtle motion vector refinement at the decoder to reduce bitrate</li>
+    <li><strong>Subpixel accuracy up to 1/16</strong> — Finest fractional motion yet standardised</li>
+  </ul>
+
+  <div class="callout-warn">
+    <strong>Same old problem:</strong> VVC is covered by an even more complex patent landscape than HEVC. The MPEG LA pool for VVC has multiple tiers and caps, but independent licensors (including some who fought HEVC battles) are already signalling aggressive royalty demands. Broad adoption is uncertain.
+  </div>
+
+  <!-- SECTION 8: EVC -->
+  <h2>EVC — Essential Video Coding</h2>
+
+  <p><span class="key-term">EVC (2021)</span> is MPEG's attempt to create a simpler, more palatable alternative to VVC. It comes in two profiles:</p>
+
+  <ul class="content-list">
+    <li><strong>Baseline profile</strong> — Contains only technologies whose patents expired or were donated. Royalty-free by construction.</li>
+    <li><strong>Main profile</strong> — Enhances baseline with patented technologies (subject to licensing). Achieves roughly HEVC-level efficiency.</li>
+  </ul>
+
+  <p>EVC's baseline profile deliberately avoids the patent thicket by restricting itself to well-established techniques (DCT, simple motion compensation, basic entropy coding). The result is a codec that's less efficient than HEVC but <em>legally clean</em> — a compelling option for industries that fear patent litigation.</p>
+
+  <div class="callout">
+    <strong>Adoption status:</strong> EVC has seen minimal uptake. It arrived too late and offers too little improvement. The baseline profile's efficiency is comparable to H.264, and the main profile offers nothing unique against AV1 and VVC. It remains a niche curiosity.
+  </div>
+
+  <!-- SECTION 9: LCEVC -->
+  <h2>LCEVC — Layered Enhancement</h2>
+
+  <p><span class="key-term">LCEVC (2021)</span> (Low Complexity Enhancement Video Coding) takes an entirely different approach. Instead of a monolithic codec, it's a <strong>layered enhancement</strong> that sits on top of any existing codec (H.264, HEVC, AV1, etc.) to improve quality.</p>
+
+  <p>How it works:</p>
+
+  <ul class="content-list">
+    <li>The <strong>base layer</strong> uses any existing codec to encode at a lower resolution</li>
+    <li>The <strong>enhancement layer</strong> carries residual information (high-frequency details, corrections) using a lightweight transform</li>
+    <li>A two-stage decoder reconstructs full resolution: decode base → apply enhancement → output</li>
+  </ul>
+
+  <p>LCEVC's advantages:</p>
+
+  <ul class="content-list">
+    <li><strong>Backward compatibility</strong> — Works with existing codecs and hardware decoders</li>
+    <li><strong>Low complexity</strong> — The enhancement layer processing is trivially parallelisable</li>
+    <li><strong>Gradual quality improvement</strong> — Even partial enhancement data improves quality</li>
+    <li><strong>Useful for upscaling</strong> — Ideal for native-resolution encoding with AI upscaling at the client</li>
+  </ul>
+
+  <div class="callout-info">
+    <strong>Future potential:</strong> LCEVC has been adopted by MPEG and is being explored for broadcast (DVB), streaming (CMAF), and cloud gaming. Its layered nature makes it a natural fit for adaptive streaming — each layer corresponds to a different quality level.
+  </div>
+
+  <!-- SECTION 10: Rate-Distortion Comparison -->
+  <h2>Rate-Distortion: Seeing the Differences</h2>
+
+  <p>The chart below shows each codec's <span class="key-term">rate-distortion curve</span> — a measure of how much quality (PSNR) you get at a given bitrate. Higher curves mean better compression efficiency.</p>
+
+  <div class="widget">
+    <div class="widget-header">📈 Rate-Distortion Comparison</div>
+    <div class="widget-body">
+      <canvas id="rd-canvas" width="700" height="260"></canvas>
+      <p class="widget-desc">Each curve plots the trade-off between bitrate (x-axis) and quality (y-axis). H.264 (blue) is the baseline. HEVC (green), VP9 (yellow), and AV1 (orange) each push the frontier leftward — more quality at the same bitrate, or the same quality at a lower bitrate.</p>
+    </div>
+  </div>
+
+  <div class="widget">
+    <div class="widget-header">🧩 16×16 Pixel Block</div>
+    <div class="widget-body">
+      <canvas id="block-canvas" width="280" height="170"></canvas>
+      <p class="widget-desc">A 16×16 pixel block — the smallest unit a codec works with in H.264. Modern codecs like AV1 can go up to 128×128 blocks, allowing much more efficient coding of large flat areas (sky, walls, backgrounds).</p>
+    </div>
+  </div>
+
+  <!-- SECTION 11: Comparison Table -->
+  <h2>Codec Comparison — At a Glance</h2>
+
+  <p>This table summarises the key characteristics of every major codec discussed in this lesson. All bitrate savings are approximate and content-dependent.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Codec</th>
+          <th>Year</th>
+          <th>Bitrate vs H.264</th>
+          <th>Royalty</th>
+          <th>Hardware Support</th>
+          <th>Browser Support</th>
+          <th>Primary Use</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>H.264 / AVC</strong></td>
+          <td>2003</td>
+          <td>Baseline</td>
+          <td>Patented (MPEG LA)</td>
+          <td>Universal — every device</td>
+          <td>All browsers</td>
+          <td>Streaming, Blu-ray, videoconferencing, surveillance</td>
+        </tr>
+        <tr>
+          <td><strong>H.265 / HEVC</strong></td>
+          <td>2013</td>
+          <td>~50% less</td>
+          <td>Multiple pools, high cost</td>
+          <td>Wide — Apple, NVIDIA, Intel, AMD, Qualcomm</td>
+          <td>Safari, Edge, some Chrome</td>
+          <td>4K Blu-ray, Apple ecosystem, premium streaming</td>
+        </tr>
+        <tr>
+          <td><strong>VP9</strong></td>
+          <td>2013</td>
+          <td>~35% less</td>
+          <td>Royalty-free (Google)</td>
+          <td>Wide — all major GPU/SoC vendors</td>
+          <td>Chrome, Firefox, Edge, Opera</td>
+          <td>YouTube, open web streaming</td>
+        </tr>
+        <tr>
+          <td><strong>AV1</strong></td>
+          <td>2018</td>
+          <td>~50% less</td>
+          <td>Royalty-free (AOMedia)</td>
+          <td>Growing — NVIDIA RTX 40, Intel Arc, Apple M3+, Qualcomm</td>
+          <td>Chrome, Firefox, Edge, Opera, Safari 16.4+</td>
+          <td>Netflix, YouTube, premium streaming, <br>cloud gaming</td>
+        </tr>
+        <tr>
+          <td><strong>AV2</strong></td>
+          <td>~2027</td>
+          <td>~65% less (target)</td>
+          <td>Royalty-free (AOMedia)</td>
+          <td>None yet (in development)</td>
+          <td>None yet</td>
+          <td>Future streaming, next-gen internet video</td>
+        </tr>
+        <tr>
+          <td><strong>H.266 / VVC</strong></td>
+          <td>2020</td>
+          <td>~60% less</td>
+          <td>Complex pools, uncertain cost</td>
+          <td>Early — Fraunhofer, some SoC prototypes</td>
+          <td>None yet</td>
+          <td>Broadcast, future UHD, premium delivery</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout-warn">
+    <strong>Table caveats:</strong> Bitrate savings vary wildly with content (animation compresses differently from live-action, noisy footage from clean). Hardware decode support is a moving target — check current GPU generation. Browser support can change with any release.
+  </div>
+
+  <!-- SECTION 10: Adoption Realities -->
+  <h2>Adoption Realities — The Messy Truth</h2>
+
+  <p>The codec standards war isn't fought on technical merit alone. Here's how things actually shake out in 2026:</p>
+
+  <h3>Browser Support</h3>
+
+  <ul class="content-list">
+    <li><strong>H.264</strong> — 100% browser support. The universal fallback.</li>
+    <li><strong>HEVC</strong> — Safari and Edge (partial). Chrome dropped support on most platforms.</li>
+    <li><strong>VP9</strong> — All browsers except Safari (before 16.4 added support).</li>
+    <li><strong>AV1</strong> — All modern browsers now support software decode. Hardware decode varies.</li>
+    <li><strong>VVC</strong> — No browser support yet. Expect adoption to mirror HEVC's slow trajectory.</li>
+  </ul>
+
+  <h3>Hardware Support</h3>
+
+  <ul class="content-list">
+    <li><strong>H.264</strong> — Every GPU, every SoC, every phone made in the last 15 years. Hardware encoding is equally universal.</li>
+    <li><strong>HEVC</strong> — Broad hardware decode in Apple (A8+), NVIDIA (GTX 950+), Intel (Kaby Lake+), AMD (Vega+), Qualcomm (Snapdragon 820+).</li>
+    <li><strong>VP9</strong> — Hardware decode in most GPUs since ~2016. Intel Jasper Lake+, NVIDIA Pascal+, AMD Polaris+.</li>
+    <li><strong>AV1</strong> — Hardware decode in NVIDIA RTX 3050+, Intel Arc, Apple M3, Snapdragon 8 Gen 1+, MediaTek Dimensity.</li>
+    <li><strong>VVC</strong> — No consumer hardware decode yet. Fraunhofer's software decoder exists but is much higher complexity than AV1 software decode.</li>
+  </ul>
+
+  <h3>Content Availability</h3>
+
+  <ul class="content-list">
+    <li><strong>YouTube</strong> — VP9 primary, AV1 for premium and high-volume streams.</li>
+    <li><strong>Netflix</strong> — AV1 for newer content, HEVC for Apple devices, H.264 fallback.</li>
+    <li><strong>Apple TV+</strong> — HEVC exclusively (Apple pays patent tolls).</li>
+    <li><strong>Disney+, Max, Amazon Prime</strong> — Mostly HEVC for 4K, H.264 for 1080p. AV1 expanding.</li>
+    <li><strong>Blu-ray</strong> — H.264 for 1080p, HEVC for 4K. Mandated by spec.</li>
+    <li><strong>Broadcast TV</strong> — Still MPEG-2 and H.264. ATSC 3.0 supports HEVC.</li>
+  </ul>
+
+  <div class="callout">
+    <strong>The practical takeaway:</strong> As a developer or content publisher, you need to support <em>at least three</em> codecs: H.264 for universal fallback, HEVC or VP9 for middle ground, and AV1 for the future. Transcoding pipelines are now a permanent fixture, not a transitional strategy.
+  </div>
+
+  <!-- Interactive Experiment -->
+  <div class="widget">
+    <div class="widget-header">🤔 Why It Matters</div>
+    <div class="widget-body">
+      <p style="font-size:0.88rem;margin:0 0 0.6rem;">Each time a new codec saves 30% bandwidth, streaming services save millions in CDN costs — but they also spend millions on transcoding infrastructure and compatibility testing.</p>
+      <div class="comparison-grid">
+        <div class="comparison-card">
+          <h4>📦 Smaller Files</h4>
+          <p>AV1 can deliver the same 4K quality as H.264 at half the bitrate. For a 90-minute movie, that's ~3 GB vs. ~6 GB.</p>
+        </div>
+        <div class="comparison-card">
+          <h4>🔌 Compatibility Tax</h4>
+          <p>Streaming services maintain 3–4 codec variants of every title. Netflix estimates this adds 15–20% to storage and CDN costs.</p>
+        </div>
+        <div class="comparison-card">
+          <h4>💡 Power Matters</h4>
+          <p>Software decoding AV1 on an older phone drains battery 2–3× faster than H.264 hardware decode. Hardware decode is non-negotiable for mobile.</p>
+        </div>
+        <div class="comparison-card">
+          <h4>⚖️ Legal Risk</h4>
+          <p>Using HEVC without proper royalty arrangements can expose a company to patent litigation. Several companies learned this the hard way.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="experiment-callout">
+    Look at the rate-distortion chart above. Notice how H.264 and AV1 start at different quality levels at the lowest bitrate. Which codec gives the best quality when bandwidth is severely constrained (left side of the chart)? Which one benefits most when bandwidth is plentiful (right side)?
+  </div>
+
+  <!-- SECTION 12: Summary -->
+  <h2>What This Means</h2>
+
+  <p>The codec landscape is no longer a simple chain of improvements. It's a branching tree with competing branches from different standards bodies, each with different licensing philosophies and adoption strategies.</p>
+
+  <p>The key takeaways:</p>
+
+  <ul class="content-list">
+    <li><strong>H.264</strong> is the baseline — universal, decent quality, but showing its age.</li>
+    <li><strong>HEVC</strong> proved the industry can't standardise without solving licensing first.</li>
+    <li><strong>VP9</strong> showed royalty-free was viable but couldn't break Apple's walled garden.</li>
+    <li><strong>AV1</strong> is the most promising future — royalty-free, backed by industry giants, technically excellent. Encoding speed is the last hurdle.</li>
+    <li><strong>VVC</strong> offers the best compression but repeats HEVC's licensing mistakes — expect slow adoption.</li>
+    <li><strong>Fragmentation is permanent</strong> — no single codec will dominate like H.264 did. Multi-codec pipelines are the new normal.</li>
+  </ul>
+
+  <p>In <strong>Lesson 5</strong>, we'll dive deep into the licensing and economics that drive these adoption decisions — and why hardware companies, not standards bodies, often decide which codecs succeed.</p>
+
+  <!-- Completion -->
+  <div class="completion-box">
+    <span class="check-icon">○</span>
+    <span class="check-text">Mark Lesson 4 as complete</span>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="lesson-nav-bottom">
+    <a href="lesson3.html" class="nav-btn prev">← Lesson 3</a>
+    <a href="lesson5.html" class="nav-btn next">Lesson 5 →</a>
+  </div>
+
+</main>
+
+<script src="assets/nav.js"></script>
+<script>
+// Initialize interactive widgets
+document.addEventListener('DOMContentLoaded', function() {
+  try {
+    RDDemo.init('rd-canvas');
+  } catch(e) { console.warn('RDDemo:', e.message); }
+
+  try {
+    PixelBlockDemo.init('block-canvas', 16);
+  } catch(e) { console.warn('PixelBlockDemo:', e.message); }
+});
+</script>
+</body>
+</html>

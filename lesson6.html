@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Codecs - Lesson 6: Future Directions</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-lesson="6">
+    <!-- Navigation Drawer -->
+    <nav>
+        <h2>Video Codecs Course</h2>
+        <ul>
+            <li><a href="lesson1.html">Lesson 1: Why Video Codecs?</a></li>
+            <li><a href="lesson2.html">Lesson 2: Block-Based Transform Coding</a></li>
+            <li><a href="lesson3.html">Lesson 3: Intra Prediction</a></li>
+            <li><a href="lesson4.html">Lesson 4: Motion Estimation and Compensation</a></li>
+            <li><a href="lesson5.html">Lesson 5: Entropy Coding and Advanced Techniques</a></li>
+            <li><a href="lesson6.html" class="active">Lesson 6: Future Directions</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <header>
+            <h1>Future Directions in Video Coding</h1>
+            <div class="story-hook">
+                <p>What happens when we move beyond traditional block-based hybrid codecs? The future of video compression lies at the intersection of machine learning, perceptual understanding, and immersive media formats.</p>
+            </div>
+            <div class="tldr">
+                <h3>TLDR:</h3>
+                <p>Explore emerging video compression technologies including neural network-based approaches, generative AI compression, perceptual coding innovations, immersive formats, and evolving adaptive streaming standards.</p>
+            </div>
+        </header>
+
+        <section>
+            <h2>Neural Network Compression</h2>
+            <p>Autoencoder-based architectures learn optimal representations directly from data, potentially outperforming hand-designed transforms.</p>
+            
+            <div class="callout-info">
+                <h3>End-to-End Learned Compression</h3>
+                <p>Neural networks can replace traditional transform, quantization, and entropy coding stages with learned operations optimized jointly for rate-distortion performance.</p>
+            </div>
+            
+            <p>Key advantages include adaptive basis functions, joint optimization of all compression stages, and better modeling of complex statistical dependencies in natural video.</p>
+            
+            <div class="callout-warn">
+                <h3>Challenges</h3>
+                <p>High computational complexity, lack of hardware acceleration, difficulty in standardization, and ensuring compatibility with existing infrastructure remain significant hurdles.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>Generative Compression</h2>
+            <p>Instead of transmitting every pixel, send minimal descriptors and let AI reconstruct the scene using generative models.</p>
+            
+            <p>This approach shifts from predictive coding to generative modeling: transmit semantic information (pose, lighting, expression) and let decoder-generated priors fill in visual details.</p>
+            
+            <div class="callout-info">
+                <h3>Latent Space Representation</h3>
+                <p>Compress to extremely low-dimensional latent spaces that capture essential perceptual information, then use powerful generative decoders (GANs, diffusion models) for reconstruction.</p>
+            </div>
+            
+            <p>Early research shows potential for orders-of-magnitude bitrate reduction for talking-head videos and similar constrained content, though general-purpose applications remain challenging.</p>
+        </section>
+
+        <section>
+            <h2>Perceptual Coding Advances</h2>
+            <p>Modern codecs increasingly incorporate sophisticated models of human visual perception to optimize bit allocation where it matters most.</p>
+            
+            <p>Beyond basic luminance masking and contrast sensitivity, newer approaches include:</p>
+            <ul>
+                <li>Foveated encoding for VR/AR applications</li>
+                <li>Attention-guided bit allocation</li>
+                <li>Perceptual loss functions in training</li>
+                <li>Content-adaptive quantization based on semantic understanding</li>
+            </ul>
+            
+            <div class="callout-info">
+                <h3>Foveated Video Coding</h3>
+                <p>Exploit the non-uniform resolution of human vision by allocating fewer bits to peripheral vision regions, particularly valuable for head-mounted displays.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>Immersive Video Formats</h2>
+            <p>New video experiences demand new compression approaches tailored to their unique characteristics.</p>
+            
+            <h3>360° Video</h3>
+            <p>Equirectangular projection creates sampling inefficiencies (polar oversampling). Solutions include:</p>
+            <ul>
+                <li>Sphere-adaptive projections (cube maps, octahedron)</li>
+                <li>Viewport-adaptive streaming</li>
+                <li>Rotation-invariant encoding</li>
+            </ul>
+            
+            <h3>Volumetric Video</h3>
+            <p>Represent scenes as 3D point clouds or meshes with associated textures, requiring geometry and attribute compression techniques.</p>
+            
+            <h3>Light Field Video</h3>
+            <p>Capture and compress multi-view, multi-directional light information enabling post-capture refocusing and perspective shifts.</p>
+            
+            <div class="callout-warn">
+                <h3>Storage Requirements</h3>
+                <p>Immersive formats can require 10-100x more data than conventional video, making efficient compression essential for practical adoption.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>ML in-loop Filtering</h2>
+            <p>Machine learning enhances traditional deblocking and deringing filters with content-adaptive, learned approaches.</p>
+            
+            <p>Instead of fixed filters, neural networks learn optimal filtering strategies based on local content characteristics, blocking artifacts, and quantization parameters.</p>
+            
+            <div class="callout-info">
+                <h3>Examples</h3>
+                <p>AV1's Film Grain Synthesis and VVC's ALF (Adaptive Loop Filter) represent steps toward fully learned in-loop processing that adapts to video content in real-time.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>Adaptive Streaming Evolution</h2>
+            <p>Delivery technologies continue to evolve to meet diverse network conditions and device capabilities.</p>
+            
+            <h3>CMAF (Common Media Application Format)</h3>
+            <p>Unifies HLS and DASH fragmented MP4 formats to reduce storage and CDN costs while enabling low-latency streaming.</p>
+            
+            <h3>LL-HLS (Low Latency HLS)</h3>
+            <p>Reduces glass-to-glass latency to 2-3 seconds through partial segment delivery and HTTP/2 server push.</p>
+            
+            <h3>Per-Title Encoding</h3>
+            <p>Customize encoding ladder (bitrate/resolution pairs) for each content title based on its complexity, rather than using a one-size-fits-all approach.</p>
+            
+            <div class="callout-info">
+                <h3>Benefits</h3>
+                <p>Per-title encoding typically saves 10-25% bitrate at equivalent quality compared to fixed encoding ladders, translating to significant CDN cost reductions.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>Cloud Gaming Latency Requirements</h2>
+            <p>Interactive streaming imposes extremely strict latency constraints that challenge traditional video coding approaches.</p>
+            
+            <p>Cloud gaming requires end-to-end latencies under 100ms for responsive gameplay, necessitating:</p>
+            <ul>
+                <li>Ultra-low latency encoding (<30ms)</li>
+                <li>Minimal buffering</li>
+                <li>Simplified entropy coding</li>
+                <li>Hardware-accelerated implementations</li>
+            </ul>
+            
+            <div class="callout-warn">
+                <h3>Trade-offs</h3>
+                <p>Cloud gaming codecs often sacrifice compression efficiency for speed, using higher quantizers and simpler modes to meet latency budgets.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>Sustainable Codecs</h2>
+            <p>With video representing approximately 80% of global internet traffic, codec efficiency has direct environmental impact.</p>
+            
+            <p>More efficient codecs reduce:</p>
+            <ul>
+                <li>Data center energy consumption</li>
+                <li>Network transmission power</li>
+                <li>Device decoding energy</li>
+                <li>Overall carbon footprint of video delivery</li>
+            </ul>
+            
+            <div class="callout-info">
+                <h3>Energy-Aware Encoding</h3>
+                <p>Modern encoders can optimize for energy consumption alongside quality and bitrate, selecting coding tools that minimize decoder complexity on target devices.</p>
+            </div>
+            
+            <p>The push for greener codecs drives innovation in both compression efficiency and computational simplicity, benefiting both the environment and end-users.</p>
+        </section>
+
+        <!-- Widgets -->
+        <section>
+            <h2>Interactive Demonstrations</h2>
+            <div class="demo-grid">
+                <div class="demo-widget">
+                    <h3>Quantization Effects</h3>
+                    <div>
+                        <canvas id="quant-canvas" width="200" height="200"></canvas>
+                    </div>
+                    <div class="slider-container">
+                        <label for="qp-slider">QP Value:</label>
+                        <input type="range" id="qp-slider" min="0" max="51" value="28">
+                        <span id="qp-display">28</span>
+                    </div>
+                </div>
+                
+                <div class="demo-widget">
+                    <h3>Partitioning Patterns</h3>
+                    <div>
+                        <canvas id="partition-canvas" width="200" height="200"></canvas>
+                    </div>
+                    <div class="slider-container">
+                        <label for="depth-slider">Partition Depth:</label>
+                        <input type="range" id="depth-slider" min="0" max="4" value="2">
+                        <span id="depth-display">2</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Completion Box -->
+        <div class="completion-box">
+            <h3>Mark Lesson Complete</h3>
+            <p><input type="checkbox" id="lesson6-complete"> I've reviewed all concepts in Lesson 6</p>
+            <button id="lesson6-check">Check Understanding</button>
+            <p id="lesson6-message"></p>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <div class="lesson-nav-bottom">
+        <a href="lesson5.html">← Lesson 5: Entropy Coding and Advanced Techniques</a>
+        <a href="#" onclick="alert('Congratulations! You have completed the Video Codecs course!'); return false;">Course Complete →</a>
+    </div>
+
+    <!-- Course Complete Section -->
+    <section class="course-complete">
+        <h2>Congratulations!</h2>
+        <p>You've completed the Video Codecs interactive course!</p>
+        <p>You now understand:</p>
+        <ul>
+            <li>The fundamental principles behind modern video compression</li>
+            <li>How hybrid block-based codecs like H.264/AVC, HEVC, and AV1 work</li>
+            <li>Emerging directions in neural network and generative compression</li>
+            <li>Perceptual coding techniques and immersive video formats</li>
+            <li>Adaptive streaming technologies and cloud gaming requirements</li>
+            <li>Considerations for sustainable and energy-efficient codec design</li>
+        </ul>
+        
+        <h3>Further Reading:</h3>
+        <ul>
+            <li><a href="https://arxiv.org/abs/2001.02267" target="_blank">Learned Image Compression (Toderici et al., 2017)</a></li>
+            <li><a href="https://arxiv.org/abs/2002.01196" target="_blank">Generative Image Compression (Yang et al., 2020)</a></li>
+            <li><a href="https://arxiv.org/abs/2103.03827" target="_blank">Foveated Video Coding (Bako et al., 2021)</a></li>
+            <li><a href="https://aomediacodec.github.io/av1-spec/" target="_blank">AV1 Specification</a></li>
+            <li><a href="https://www.itu.int/rec/T-REC-H.266" target="_blank">H.266/VVC Standard</a></li>
+        </ul>
+    </section>
+
+    <script src="assets/nav.js"></script>
+    <script src="assets/codec-demo.js"></script>
+    <script>
+        // Initialize widgets for this lesson
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize quantization demo
+            if (typeof QuantDemo !== 'undefined') {
+                QuantDemo.init('quant-canvas', 'qp-slider', 'qp-display');
+            }
+            
+            // Initialize partition demo
+            if (typeof PartitionDemo !== 'undefined') {
+                PartitionDemo.init('partition-canvas', 'depth-slider', 'depth-display');
+            }
+            
+            // Lesson completion checking
+            const completeCheckbox = document.getElementById('lesson6-complete');
+            const checkButton = document.getElementById('lesson6-check');
+            const messageElement = document.getElementById('lesson6-message');
+            
+            checkButton.addEventListener('click', function() {
+                if (completeCheckbox.checked) {
+                    messageElement.textContent = 'Great job completing Lesson 6! You now understand the future directions of video coding technology.';
+                    messageElement.style.color = '#28a745';
+                    
+                    // Mark as completed in localStorage
+                    localStorage.setItem('lesson6Completed', 'true');
+                    
+                    // Check if all lessons are complete
+                    const allComplete = [
+                        'lesson1Completed',
+                        'lesson2Completed', 
+                        'lesson3Completed',
+                        'lesson4Completed',
+                        'lesson5Completed',
+                        'lesson6Completed'
+                    ].every(lesson => localStorage.getItem(lesson) === 'true');
+                    
+                    if (allComplete) {
+                        setTimeout(() => {
+                            alert('Congratulations! You have completed all lessons in the Video Codecs course!');
+                        }, 500);
+                    }
+                } else {
+                    messageElement.textContent = 'Please check the box to mark this lesson as complete.';
+                    messageElement.style.color = '#dc3545';
+                }
+            });
+            
+            // Restore completion state
+            if (localStorage.getItem('lesson6Completed') === 'true') {
+                completeCheckbox.checked = true;
+                messageElement.textContent = 'Lesson 6 marked as complete.';
+                messageElement.style.color = '#28a745';
+            }
+        });
+    </script>
+</body>
+</html>

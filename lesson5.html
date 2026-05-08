@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 5 — Licensing & Economics | Video Codecs</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .royalty-table { font-size: 0.82rem; }
+  .royalty-table td:first-child { font-weight: 600; color: var(--accent2); }
+  .royalty-table td:nth-child(2) { color: var(--accent3); }
+  .royalty-table .free-row td:nth-child(2) { color: var(--success); }
+  .royalty-table .tbd-row td { color: var(--text-muted); }
+  .pool-svg { max-width: 100%; height: auto; margin: 1rem auto; display: block; }
+  .timeline-inline { display: flex; gap: 0; overflow-x: auto; margin: 1.2rem 0; border-radius: var(--radius-sm); }
+  .timeline-item { flex: 1; min-width: 80px; text-align: center; padding: 0.5rem 0.3rem; font-size: 0.72rem; border-right: 1px solid var(--border); }
+  .timeline-item:last-child { border-right: none; }
+  .timeline-item .year { font-weight: 700; display: block; color: var(--text); }
+  .timeline-item .label { color: var(--text-muted); display: block; margin-top: 0.15rem; }
+  .timeline-item.pool { background: rgba(0, 188, 212, 0.08); }
+  .timeline-item.free { background: rgba(105, 240, 174, 0.08); }
+  .timeline-item.litigation { background: rgba(255, 107, 53, 0.08); }
+  .dollar-figure { font-size: 1.8rem; font-weight: 700; color: var(--accent3); text-align: center; margin: 0.5rem 0; }
+  .dollar-figure small { font-size: 0.9rem; color: var(--text-muted); font-weight: 400; }
+  .stat-row { display: flex; flex-wrap: wrap; gap: 0.8rem; margin: 1rem 0; }
+  .stat-card { flex: 1; min-width: 120px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.8rem; text-align: center; }
+  .stat-card .num { font-size: 1.5rem; font-weight: 700; color: var(--accent2); display: block; }
+  .stat-card .desc { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem; }
+  .side-deck { display: flex; flex-wrap: wrap; gap: 0.8rem; margin: 1rem 0; }
+  .side-card { flex: 1; min-width: 180px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.8rem; }
+  .side-card h4 { font-size: 0.9rem; margin-bottom: 0.3rem; }
+  .side-card p { font-size: 0.82rem; color: var(--text-muted); margin: 0; }
+</style>
+</head>
+<body data-lesson="5">
+
+<!-- Navigation -->
+<nav class="top-nav">
+  <a href="index.html" class="nav-brand">
+    <span class="emoji">🎥</span> Video Codecs
+  </a>
+  <span class="nav-lesson">Lesson 5: Licensing & Economics</span>
+  <button class="menu-btn" aria-label="Lessons">☰</button>
+</nav>
+
+<!-- Lesson Drawer -->
+<div class="drawer-overlay"></div>
+<aside class="lesson-drawer">
+  <div class="drawer-header">
+    <h3>Course Syllabus</h3>
+    <button class="drawer-close">✕</button>
+  </div>
+  <ul class="lesson-list">
+    <li><a href="index.html"><span class="lesson-num">🏠</span>Home</a></li>
+    <li><a href="lesson1.html"><span class="lesson-num">01</span> How Video Codecs Work <span class="lesson-check" data-lesson="1">✓</span></a></li>
+    <li><a href="lesson2.html"><span class="lesson-num">02</span> Weaknesses of Existing Codecs <span class="lesson-check" data-lesson="2">✓</span></a></li>
+    <li><a href="lesson3.html"><span class="lesson-num">03</span> Hardware & Codec Interplay <span class="lesson-check" data-lesson="3">✓</span></a></li>
+    <li><a href="lesson4.html"><span class="lesson-num">04</span> Modern Codec Landscape <span class="lesson-check" data-lesson="4">✓</span></a></li>
+    <li><a href="lesson5.html" class="active"><span class="lesson-num">05</span> Licensing & Economics <span class="lesson-check" data-lesson="5">✓</span></a></li>
+    <li><a href="lesson6.html"><span class="lesson-num">06</span> Future Directions <span class="lesson-check" data-lesson="6">✓</span></a></li>
+  </ul>
+  <div class="progress-bar"><div class="progress-bar-fill" style="width:0%"></div></div>
+</aside>
+
+<!-- Main Content -->
+<main class="container">
+
+  <header class="lesson-header">
+    <div class="lesson-meta">Lesson 5 of 6</div>
+    <h1>Licensing & Economics</h1>
+    <p class="lesson-subtitle">Patent pools, royalty stacking, and the billion-dollar war over video</p>
+  </header>
+
+  <div class="story-hook">
+    In 2019, <strong>Apple</strong> paid approximately <strong>$2.7 billion</strong> in royalties for a single video codec — H.264. Not for development, not for engineering — just for the right to use the compression technology in iPhones, iPads, and Macs. This wasn't unique to Apple. Every smartphone manufacturer, TV maker, streaming service, and browser vendor navigates a labyrinth of thousands of essential patents held by hundreds of companies, organized into competing patent pools, each demanding their slice. The result is a hidden tax on video that reshapes entire technology markets.
+  </div>
+
+  <div class="tldr">
+    <div class="tldr-label">TL;DR</div>
+    <p>Video codecs are governed by a complex web of patents. MPEG LA's H.264 pool was a well-oiled machine (~$0.20/device), but H.265/HEVC fractured into <em>three competing pools</em> with uncertain royalty stacking. Google's VP9 and the Alliance for Open Media's AV1 broke the mold with royalty-free models, while the next generation (VVC/H.266) threatens to repeat the H.265 disaster. These licensing decisions affect everything from browser support to hardware design to streaming CDN costs.</p>
+  </div>
+
+  <!-- SECTION 1: The Problem -->
+  <h2>The Problem: A Thicket of Patents</h2>
+
+  <p>
+    Modern video codecs are complex — so complex that no single company holds all the essential patents. A single video standard may implicate <span class="key-term">thousands of essential patents</span> from hundreds of patent holders spread across dozens of countries.
+  </p>
+
+  <div class="stat-row">
+    <div class="stat-card">
+      <span class="num">10,000+</span>
+      <span class="desc">Patents essential to H.265/HEVC</span>
+    </div>
+    <div class="stat-card">
+      <span class="num">50+</span>
+      <span class="desc">Companies claiming essential patents for HEVC</span>
+    </div>
+    <div class="stat-card">
+      <span class="num">3</span>
+      <span class="desc">Competing patent pools for HEVC alone</span>
+    </div>
+    <div class="stat-card">
+      <span class="num">$1B+</span>
+      <span class="desc">Annual video codec patent royalty payments</span>
+    </div>
+  </div>
+
+  <p>
+    The core problem is <span class="key-term">royalty stacking</span>: if twenty different companies each demand $0.10 per device, the total royalty exceeds the profit margin on the device itself. Without coordinated licensing, the transaction costs alone — negotiating individual licenses with hundreds of patent holders — would be crippling.
+  </p>
+
+  <div class="callout-warn">
+    <strong>Royalty stacking in action:</strong> For early H.265/HEVC devices, the cumulative royalty from all three pools could reach <strong>$1.60–$2.00 per device</strong> — roughly 10× the cost of H.264 licensing. This uncertainty caused many hardware vendors to delay HEVC support and accelerated interest in royalty-free alternatives.
+  </div>
+
+  <!-- SECTION 2: MPEG LA Patent Pools -->
+  <h2>MPEG LA &amp; the Patent Pool Model</h2>
+
+  <p>
+    The <span class="key-term">patent pool</span> was the solution. Instead of negotiating with hundreds of patent holders individually, a neutral administrator bundles patents into a single license. The most famous administrator is <strong>MPEG LA</strong> (now Via Licensing Alliance), which pioneered the modern video codec patent pool.
+  </p>
+
+  <div class="callout-info">
+    <strong>How it works:</strong> Patent holders contribute their essential patents to the pool. In exchange, they receive a share of royalty revenue. Licensees pay one fee and receive rights to all patents in the pool. The pool administrator handles enforcement against unlicensed users and distributes royalties proportionally.
+  </div>
+
+  <p>
+    The model is brilliant in theory: one-stop shopping, transparent pricing, reduced litigation. In practice, it works well when there's a single dominant pool. When multiple pools compete for the same standard, the model breaks down — a lesson H.265 would teach the industry the hard way.
+  </p>
+
+  <div class="widget">
+    <div class="widget-header">🗺️ The Patent Pool Landscape (Timeline)</div>
+    <div class="widget-body">
+      <div class="timeline-inline">
+        <div class="timeline-item pool">
+          <span class="year">2003</span>
+          <span class="label">MPEG LA → H.264 pool launched</span>
+        </div>
+        <div class="timeline-item pool">
+          <span class="year">2010</span>
+          <span class="label">VP8 → Google goes royalty-free</span>
+        </div>
+        <div class="timeline-item litigation">
+          <span class="year">2011</span>
+          <span class="label">Nokia vs Apple patent war</span>
+        </div>
+        <div class="timeline-item pool">
+          <span class="year">2013</span>
+          <span class="label">HEVC → MPEG LA pool established</span>
+        </div>
+        <div class="timeline-item litigation">
+          <span class="year">2015</span>
+          <span class="label">HEVC Advance pool formed</span>
+        </div>
+        <div class="timeline-item litigation">
+          <span class="year">2017</span>
+          <span class="label">Velos Media — 3rd HEVC pool</span>
+        </div>
+        <div class="timeline-item free">
+          <span class="year">2018</span>
+          <span class="label">AV1 released — royalty-free</span>
+        </div>
+        <div class="timeline-item free">
+          <span class="year">2023</span>
+          <span class="label">AV2 project begins (royalty-free)</span>
+        </div>
+        <div class="timeline-item litigation">
+          <span class="year">2024+</span>
+          <span class="label">VVC pools forming</span>
+        </div>
+      </div>
+      <p class="widget-desc">The patent landscape has fractured over time, with royalty-free options gaining momentum as pool fragmentation creates uncertainty.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 3: H.264 Licensing -->
+  <h2>H.264 / AVC — The Gold Standard</h2>
+
+  <p>
+    The <strong>H.264</strong> patent pool managed by MPEG LA is arguably the most successful technology licensing program in history. It established a predictable, affordable model that enabled the entire streaming video industry.
+  </p>
+
+  <div class="callout-info">
+    <strong>H.264 license terms (as of the pool's peak):</strong>
+    <ul class="content-list" style="margin-top:0.5rem;">
+      <li><strong>Consumer devices:</strong> ~$0.20 per unit, capped at ~$6.5 million per year per licensee</li>
+      <li><strong>Software decoders:</strong> A flat fee structure — no per-unit charge for PC software</li>
+      <li><strong>Free for internet broadcast:</strong> No royalty for free-to-end-user internet video with fewer than 100,000 subscribers</li>
+      <li><strong>Content:</strong> A small per-program fee for distributed content, capped at $100,000/year per title</li>
+    </ul>
+  </div>
+
+  <p>
+    The annual cap was crucial. It meant that after a certain volume, the marginal cost of adding H.264 support became zero. This gave large manufacturers like Apple, Samsung, and Sony the confidence to build H.264 into billions of devices. The caps also made H.264 essentially free for content distributors — Netflix, YouTube, and Amazon could stream H.264 without per-stream royalty obligations.
+  </p>
+
+  <div class="callout-warn">
+    <strong>Why it worked:</strong> H.264's licensing succeeded because there was <em>one pool</em> with <em>clear terms</em> and <em>sane caps</em>. Patent holders understood that reasonable licensing was better than no licensing. This consensus collapsed with the next generation.
+  </div>
+
+  <!-- SECTION 4: H.265/HEVC — Licensing Disaster -->
+  <h2>H.265 / HEVC — The Licensing Disaster</h2>
+
+  <p>
+    If H.264 licensing was a well-designed highway, H.265 licensing was a demolition derby. The standard promised 50% better compression than H.264, but the licensing uncertainty nearly killed its adoption.
+  </p>
+
+  <h3>Three Competing Pools</h3>
+
+  <div class="side-deck">
+    <div class="side-card">
+      <h4>🔵 MPEG LA (HEVC)</h4>
+      <p>~$0.20/device, capped at ~$25M/year. The "traditional" pool with ~30+ patent holders including Samsung, Philips, and GE.</p>
+    </div>
+    <div class="side-card">
+      <h4>🟠 HEVC Advance</h4>
+      <p>Started at $1.20/device (later reduced). Included Dolby, GE, Mitsubishi. Initially had no cap, later added a $40M cap.</p>
+    </div>
+    <div class="side-card">
+      <h4>🔴 Velos Media</h4>
+      <p>Launched 2017 by Ericsson, Panasonic, Qualcomm, Sharp. Added another layer of royalty obligations.</p>
+    </div>
+  </div>
+
+  <p>
+    A device manufacturer implementing HEVC potentially had to pay <em>all three pools</em> — and it was unclear whether the pools covered all essential patents. Some patent holders (like Nokia and Siemens) held out entirely, demanding separate licenses.
+  </p>
+
+  <div class="callout-warn">
+    <strong>Royalty stacking uncertainty:</strong> Combined HEVC licensing could theoretically cost <strong>$1.60–$2.00+ per device</strong> — with no guarantee that additional claims wouldn't surface later. For low-margin devices like a $30 streaming stick, this royalty alone could represent 5–7% of the device cost.
+  </div>
+
+  <p>
+    The result: <span class="key-term">adoption paralysis</span>. Apple added HEVC decode in 2017 (iOS 11, macOS High Sierra) but only for their own ecosystem. Android device makers delayed HEVC hardware for years. Netflix and YouTube used HEVC selectively. The licensing mess was arguably the single biggest factor driving the industry toward royalty-free alternatives.
+  </p>
+
+  <div class="experiment-callout">
+    Compare compression efficiency vs. licensing cost: the RD curve below visualizes why a 50% bitrate savings matters, but only if you can actually deploy the codec at scale.
+  </div>
+
+  <!-- SECTION 5: VP8/VP9 — Google's Royalty-Free Gambit -->
+  <h2>VP8 &amp; VP9 — Google's Royalty-Free Gambit</h2>
+
+  <p>
+    In 2010, Google acquired On2 Technologies and with it the <strong>VP8</strong> codec. They released VP8 as royalty-free — an explicit challenge to the MPEG LA licensing model. VP8's compression wasn't competitive with H.264, but the principle was established.
+  </p>
+
+  <p>
+    <strong>VP9</strong> followed in 2013, and this was the game-changer. VP9 offered compression approaching HEVC's efficiency — completely free of patent royalty obligations. Google's strategy had three components:
+  </p>
+
+  <ul class="content-list">
+    <li><strong>Defensive patent portfolio:</strong> Google amassed a huge patent portfolio and pledged not to assert it against VP9 implementations. Anyone who attacked VP9 users would face Google's patents.</li>
+    <li><strong>YouTube integration:</strong> Google converted YouTube to VP9, instantly making it the most-watched video format on the planet. Browser vendors had to support it or break YouTube.</li>
+    <li><strong>Browser bundling:</strong> Chrome shipped VP9 support natively. Edge (Chromium-based) followed. Firefox added support. Safari remained H.264/HEVC-only for years.</li>
+  </ul>
+
+  <div class="callout">
+    <strong>VP9's market impact:</strong> By 2020, VP9 accounted for ~40% of all video streaming traffic (mostly YouTube and some Netflix streams). It proved that a royalty-free codec could achieve widespread adoption if backed by a sufficiently large ecosystem player.
+  </div>
+
+  <p>
+    The catch: VP9 had no hardware decode support in most devices for years. Apple never added VP9 hardware decoding to their chips (they bet on HEVC). This meant VP9 playback on iPhones/iPads required software decoding — draining battery and limiting adoption on those platforms.
+  </p>
+
+  <!-- SECTION 6: AV1 — The Alliance for Open Media -->
+  <h2>AV1 — The Alliance for Open Media</h2>
+
+  <p>
+    The <strong>Alliance for Open Media (AOMedia)</strong> was founded in 2015 by Amazon, Cisco, Google, Intel, Microsoft, Mozilla, and Netflix. Their mission: build a next-generation, royalty-free video codec that would match or exceed HEVC's compression without the licensing nightmare.
+  </p>
+
+  <p>
+    <strong>AV1</strong> was released in 2018. Its patent model is unique:
+  </p>
+
+  <ul class="content-list">
+    <li><strong>Patent grants:</strong> All AOMedia founding members grant a reciprocal, royalty-free license for patents essential to AV1. If you sue someone over AV1 patents, your own patent grant is revoked.</li>
+    <li><strong>Defensive suspension:</strong> If a member attacks another member over AV1 patents, the attacker loses access to the defensive patent pool.</li>
+    <li><strong>Open to all:</strong> Any implementer gets a royalty-free license, even non-members — as long as they don't assert AV1-essential patents.</li>
+    <li><strong>Third-party patents:</strong> AOMedia can't license patents from non-members. If a patent holder outside AOMedia claims essential patents, they can demand royalties — but they'd face the combined defensive portfolio of all AOMedia members.</li>
+  </ul>
+
+  <div class="callout-info">
+    <strong>This is why AV1 is different:</strong> It's not just "free for now." It's structurally designed to remain royalty-free through defensive patent aggregation and cross-licensing among the largest tech companies in the world. A third party trying to charge AV1 royalties would face patent countersuits from Google, Microsoft, Amazon, Apple, and Netflix simultaneously.
+  </div>
+
+  <p>
+    AV1's compression efficiency is impressive — about 30% better than HEVC and 50% better than H.264. But it came at a cost: AV1 encoding is <span class="key-term">computationally expensive</span>, requiring 10–100× more CPU time than HEVC encoding. Hardware decoding support is growing but still trails HEVC.
+  </p>
+
+  <!-- SECTION 7: AV2 -->
+  <h2>AV2 — Continuing the Royalty-Free Tradition</h2>
+
+  <p>
+    The AOMedia is already developing <strong>AV2</strong>, the successor to AV1, with a target of 30% additional compression gains over AV1. AV2 continues the same royalty-free licensing model established by AV1.
+  </p>
+
+  <p>
+    The AV2 project incorporates ideas from both traditional block-based coding and emerging <span class="key-term">neural network-based approaches</span>. It's expected to be finalized around 2026–2027, with hardware decode becoming mainstream in the late 2020s.
+  </p>
+
+  <div class="callout">
+    <strong>The AOMedia ecosystem:</strong> Apple joined AOMedia in 2018 and contributed patents. Apple's H.264/HEVC bet is still dominant on their platforms, but they've also added AV1 hardware decode in the M3 and A17 Pro chips. This signals that even the most proprietary platform is preparing for a royalty-free future.
+  </div>
+
+  <!-- SECTION 8: OpenH264 -->
+  <h2>Cisco's OpenH264 — A Clever Licensing Workaround</h2>
+
+  <p>
+    In 2013, <strong>Cisco</strong> did something remarkable: they published the H.264 encoder/decoder source code as open source (BSD-licensed) and agreed to pay the MPEG LA royalties on behalf of anyone who used their binary module. Mozilla adopted Cisco's OpenH264 binary for Firefox, solving the H.264 support problem without Firefox having to license the patents.
+  </p>
+
+  <div class="callout-info">
+    <strong>How it works:</strong> Cisco builds the binaries, pays MPEG LA the ~$0.20/device royalty (for desktop software) from their own end, and distributes the binary. Firefox downloads the Cisco-signed binary plugin and uses it for H.264 playback. Firefox never has to license H.264 patents — Cisco's license covers all users of the binary.
+  </div>
+
+  <p>
+    This was a <span class="key-term">clever legal hack</span> that solved a real problem: Mozilla couldn't afford H.264 licensing, but Firefox needed H.264 support to play web video. Cisco's solution — pay the pool on behalf of the entire open-source ecosystem — was a stopgap that demonstrated both the problem with the licensing model and a potential path forward.
+  </p>
+
+  <p>
+    OpenH264 only covers the baseline profile of H.264, with limited compression options. It's not a full codec — it's a legal bridge that allowed open-source browsers to keep up while the industry transitioned to royalty-free alternatives.
+  </p>
+
+  <!-- SECTION 9: Impact on Browsers -->
+  <h2>Impact on Browsers — The Codec Wars</h2>
+
+  <p>
+    Browser support for video codecs has been heavily influenced by licensing economics:
+  </p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Browser</th>
+          <th>H.264</th>
+          <th>H.265/HEVC</th>
+          <th>VP9</th>
+          <th>AV1</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Chrome</strong></td>
+          <td>✅ (since 2011)</td>
+          <td>⚠️ (platform-dependent)</td>
+          <td>✅ (native)</td>
+          <td>✅ (native)</td>
+        </tr>
+        <tr>
+          <td><strong>Firefox</strong></td>
+          <td>✅ (via OpenH264)</td>
+          <td>❌ (no support)</td>
+          <td>✅ (native)</td>
+          <td>✅ (native)</td>
+        </tr>
+        <tr>
+          <td><strong>Safari</strong></td>
+          <td>✅ (native)</td>
+          <td>✅ (native, macOS/iOS)</td>
+          <td>❌ (no support)</td>
+          <td>⚠️ (M3+, A17 Pro+)</td>
+        </tr>
+        <tr>
+          <td><strong>Edge</strong></td>
+          <td>✅ (native)</td>
+          <td>✅ (Win, platform)</td>
+          <td>✅ (native)</td>
+          <td>✅ (native)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>
+    The pattern is clear: browsers aligned with companies that had favorable licensing positions. Google (Chrome) pushed VP9 and AV1 aggressively. Mozilla (Firefox) used the OpenH264 hack and embraced VP9/AV1. Apple (Safari) stuck with the licensed MPEG codecs their hardware supported and was slow to adopt royalty-free options. Microsoft (Edge) eventually followed Google after switching to Chromium.
+  </p>
+
+  <div class="callout">
+    <strong>The Roku effect:</strong> Streaming devices like Roku and Apple TV make browser-level codec decisions. Roku supports H.264, HEVC, and VP9 (selectively). Apple TV supports H.264 and HEVC but not VP9 or AV1. These choices are driven by hardware decode availability and licensing costs, not technical merit.
+  </div>
+
+  <!-- SECTION 10: CDN Cost Implications -->
+  <h2>CDN Cost Implications — The Billion-Dollar Savings</h2>
+
+  <p>
+    Every bit of compression improvement directly reduces <span class="key-term">Content Delivery Network (CDN) costs</span>. For the largest streaming platforms, even a 1% bitrate reduction saves millions of dollars annually.
+  </p>
+
+  <div class="widget">
+    <div class="widget-header">📈 Rate-Distortion: The ROI of Better Compression</div>
+    <div class="widget-body">
+      <canvas id="rd-canvas" style="width:100%;height:240px;"></canvas>
+      <p class="widget-desc">
+        Each curve shows the quality (PSNR) achievable at a given bitrate. A "higher" curve means better compression efficiency — directly translating to lower streaming costs for the same quality. The gap between H.264 and AV1 can represent a 40–50% reduction in CDN bills.
+      </p>
+    </div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-card">
+      <span class="num">~$15B</span>
+      <span class="desc">Netflix's estimated cumulative CDN savings from codec improvements (2015–2030)</span>
+    </div>
+    <div class="stat-card">
+      <span class="num">35%</span>
+      <span class="desc">Bitrate reduction from H.264 to HEVC at equivalent quality</span>
+    </div>
+    <div class="stat-card">
+      <span class="num">50%</span>
+      <span class="desc">Bitrate reduction from H.264 to AV1 at equivalent quality</span>
+    </div>
+    <div class="stat-card">
+      <span class="num">~$1B</span>
+      <span class="desc">YouTube's estimated annual CDN cost (codec choice matters enormously)</span>
+    </div>
+  </div>
+
+  <p>
+    For <strong>Netflix</strong>, moving from H.264 to HEVC saved roughly 35% on bandwidth. Moving to AV1 saves an additional ~15–20% over HEVC. With Netflix spending an estimated $1–2 billion annually on CDN bandwidth, these percentage improvements translate to hundreds of millions in savings. This is why Netflix was a founding member of AOMedia and aggressively pushed AV1 adoption — despite AV1's encoding cost, the CDN savings dwarf the compute cost.
+  </p>
+
+  <div class="callout-info">
+    <strong>The math:</strong> If AV1 saves Netflix $200M/year in CDN costs, and encoding costs increase by $30M/year (more compute for AV1 encoding), the net benefit is <strong>$170M/year</strong>. Over a decade, that's $1.7B — more than enough incentive to fund the entire codec development effort many times over.
+  </div>
+
+  <!-- SECTION 11: Content Creation Licensing -->
+  <h2>Content Creation Licensing</h2>
+
+  <p>
+    Licensing isn't just for playback devices — it also affects content production. Professional video production tools that encode video must license the codecs they use:
+  </p>
+
+  <ul class="content-list">
+    <li><strong>Encoding software:</strong> FFmpeg, x264, x265 — commercial users need licensing. FFmpeg itself is LGPL/GPL, but patent licenses are separate from copyright licenses.</li>
+    <li><strong>Production hardware:</strong> Broadcast encoders, studio-grade video gear — manufacturers pay per-unit royalties.</li>
+    <li><strong>Content licensing:</strong> Distributing content in a licensed format may incur content-side royalties (e.g., H.264 content with >100K subscribers). In practice, most streaming services and broadcasters qualify for the free tier or pay modest fees.</li>
+    <li><strong>Royalty-free production:</strong> AV1 and VP9 eliminate content licensing entirely — you can encode and distribute without any royalty reporting or payment.</li>
+  </ul>
+
+  <div class="callout-warn">
+    <strong>The open-source pain point:</strong> Open-source video tools like FFmpeg cannot include patented codecs by default in many jurisdictions. Users must build from source with patent-encumbered codecs enabled, or rely on third-party binary distributions (like VLC's codec packages). This creates friction for open-source video workflows.
+  </div>
+
+  <!-- SECTION 12: Licensing Comparison Table -->
+  <h2>Codec Licensing Cost Comparison</h2>
+
+  <div class="table-wrap">
+    <table class="royalty-table">
+      <thead>
+        <tr>
+          <th>Codec</th>
+          <th>Royalty per Device</th>
+          <th>Annual Cap</th>
+          <th>License Pools</th>
+          <th>Free for Content</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>H.264 / AVC</td>
+          <td>~$0.20</td>
+          <td>~$6.5M</td>
+          <td>MPEG LA</td>
+          <td>Yes (after 100K subs)</td>
+        </tr>
+        <tr>
+          <td>H.265 / HEVC</td>
+          <td>~$1.20+</td>
+          <td>Varies</td>
+          <td>MPEG LA, HEVC Advance, Velos</td>
+          <td>Yes (after 500K subs)</td>
+        </tr>
+        <tr class="free-row">
+          <td>VP8 / VP9</td>
+          <td>$0</td>
+          <td>N/A</td>
+          <td>None</td>
+          <td>Yes</td>
+        </tr>
+        <tr class="free-row">
+          <td>AV1</td>
+          <td>$0</td>
+          <td>N/A</td>
+          <td>None</td>
+          <td>Yes</td>
+        </tr>
+        <tr class="tbd-row">
+          <td>VVC / H.266</td>
+          <td>TBD (likely $1+)</td>
+          <td>TBD</td>
+          <td>MPEG LA + others</td>
+          <td>TBD</td>
+        </tr>
+        <tr class="tbd-row">
+          <td>EVC (MPEG-5)</td>
+          <td>Lower than H.265</td>
+          <td>TBD</td>
+          <td>Simplified</td>
+          <td>TBD</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>
+    The gap in this table tells the whole story. Royalty-free codecs (VP9, AV1) eliminate licensing friction entirely. The traditional licensed codecs (H.264, H.265) impose per-device taxes that shape hardware and software decisions. The next generation (VVC, EVC) remains uncertain — and the industry is voting with its feet.
+  </p>
+
+  <!-- SECTION 13: Patent Litigation Landscape -->
+  <h2>Patent Litigation Landscape</h2>
+
+  <p>
+    Video codecs have generated some of the most expensive patent litigation in technology history. Here are the landmark cases:
+  </p>
+
+  <div class="side-deck">
+    <div class="side-card">
+      <h4>⚔️ Nokia vs Apple (2011)</h4>
+      <p>Nokia sued Apple over H.264 essential patents. Apple countersued. Settlement: Apple paid a lump sum + ongoing royalties, widely reported as ~$600M.</p>
+    </div>
+    <div class="side-card">
+      <h4>⚔️ Broadcom vs Qualcomm (2009)</h4>
+      <p>Broadcom alleged Qualcomm's H.264 licensing violated antitrust commitments. Qualcomm paid $891M to settle — one of the largest patent settlements ever.</p>
+    </div>
+    <div class="side-card">
+      <h4>⚔️ Nokia vs HTC (2012–2014)</h4>
+      <p>Nokia won injunctions against HTC in multiple countries over video encoding patents. HTC ultimately exited the smartphone market — licensing costs were one factor among many.</p>
+    </div>
+    <div class="side-card">
+      <h4>⚔️ Sisvel vs Xiaomi (2020+)</h4>
+      <p>Patent assertion entity Sisvel pursued Xiaomi over H.265/HEVC patents in multiple jurisdictions. Ongoing — typical of the post-HEVC litigation wave.</p>
+    </div>
+  </div>
+
+  <div class="callout-warn">
+    <strong>Patent assertion entities (PAEs):</strong> Also called "patent trolls," these companies don't make products — they buy patents and sue implementers. Video codec patents are a favorite target because codecs are essential to billions of devices. A single PAE with one obscure essential patent can demand licensing fees from the entire smartphone industry.
+  </div>
+
+  <p>
+    The litigation landscape is a major reason why the <span class="key-term">defensive patent aggregation</span> model of AOMedia is so attractive. By pooling patent commitments from the largest tech companies, AOMedia creates a mutual assured destruction scenario: anyone who sues an AV1 implementer faces counterclaims from the combined patent arsenal of Google, Microsoft, Amazon, Apple, Netflix, and others.
+  </p>
+
+  <!-- SECTION 14: Per-Unit Royalties and Hardware -->
+  <h2>Per-Unit Royalties and Hardware Decisions</h2>
+
+  <p>
+    Per-unit royalties have a profound effect on <span class="key-term">hardware design decisions</span>, especially for low-cost devices:
+  </p>
+
+  <ul class="content-list">
+    <li><strong>Streaming sticks ($25–$50):</strong> A $0.20 H.264 royalty is manageable (0.4–0.8%). A $1.50 HEVC royalty is 3–6%. At these margins, HEVC support becomes a significant cost factor.</li>
+    <li><strong>Set-top boxes ($50–$200):</strong> The same logic applies — adding HEVC adds $1–2 in royalty cost, which may push a product out of its target price point.</li>
+    <li><strong>Mobile SoCs:</strong> Qualcomm, MediaTek, and Apple include HEVC hardware decode in their SoCs, but the royalty cost is rolled into the chip price. For the SoC vendor, paying MPEG LA means they can advertise "HEVC decode" as a feature.</li>
+    <li><strong>TVs ($200–$2000):</strong> TV manufacturers pay per-unit royalties for all codecs. A 2020-era smart TV might pay $0.20 for H.264 + $1.20 for HEVC + additional for other codecs — adding up to real money across millions of units.</li>
+  </ul>
+
+  <div class="callout">
+    <strong>Why royalty-free wins in hardware:</strong> When a codec costs $0 per device, there's no marginal cost to adding support. SoC vendors can include VP9 and AV1 decoders without worrying about royalty stacking. This is why virtually all new SoCs (Qualcomm Snapdragon 8 Gen 2/3, MediaTek Dimensity, Apple M3/A17 Pro) include hardware AV1 decode — the cost is just silicon area, not legal liability.
+  </div>
+
+  <!-- SECTION 15: The Economic Bottom Line -->
+  <h2>The Bottom Line</h2>
+
+  <p>
+    Video codec licensing is not a technical decision — it's a <span class="key-term">business decision</span> that shapes technology adoption more than the technical merits of the codec itself.
+  </p>
+
+  <div class="comparison-grid">
+    <div class="comparison-card">
+      <h4 style="color:var(--accent2);">Royalty-Free Model</h4>
+      <p>VP9, AV1, AV2. Zero licensing cost. Defensive patent pool. Attracts broad ecosystem support. Hardware decode adoption growing rapidly. The winning model for the future.</p>
+    </div>
+    <div class="comparison-card">
+      <h4 style="color:var(--accent);">Licensed Model</h4>
+      <p>H.264, H.265, VVC. Predictable (or not) per-unit royalties. Caps for large players. Works when there's one pool. Fractures under multiple pools. Creates friction and uncertainty.</p>
+    </div>
+    <div class="comparison-card">
+      <h4 style="color:var(--accent3);">Hybrid / Workaround</h4>
+      <p>OpenH264, platform-mediated licensing (e.g., Windows HEVC extension). Third party pays the royalties. Useful for bridging ecosystem gaps. Not sustainable long-term.</p>
+    </div>
+  </div>
+
+  <p>
+    The industry is converging on a clear direction: <strong>royalty-free for distribution, licensed for production tools</strong>. AOMedia's AV1 and AV2 will dominate streaming and communication. VVC/H.266 may survive in broadcast and professional production where per-unit costs are less relevant. The patent pool model that enabled the streaming revolution is slowly being replaced by an open, collaborative alternative — driven not by technical superiority, but by the simple economics of removing friction from the video ecosystem.
+  </p>
+
+  <!-- Completion -->
+  <div class="completion-box">
+    <span class="check-icon">✓</span>
+    <span class="check-text">Mark lesson 5 as complete</span>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="lesson-nav-bottom">
+    <a href="lesson4.html" class="nav-btn">← Lesson 4: Modern Codec Landscape</a>
+    <a href="lesson6.html" class="nav-btn next">Lesson 6: Future Directions →</a>
+  </div>
+
+</main>
+
+<script src="assets/nav.js"></script>
+<script src="assets/codec-demo.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize the rate-distortion curve
+  if (typeof RDDemo !== 'undefined') {
+    RDDemo.init('rd-canvas');
+  }
+
+  // Completion box handler
+  var box = document.querySelector('.completion-box');
+  if (box) {
+    box.addEventListener('click', function() {
+      this.classList.toggle('checked');
+      var icon = this.querySelector('.check-icon');
+      icon.textContent = this.classList.contains('checked') ? '✓' : '';
+    });
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 3: Hardware &amp; Codec Interplay — Video Codecs: From Why to Wow</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-lesson="3">
+
+<!-- Navigation -->
+<nav class="top-nav">
+  <a href="index.html" class="nav-brand">
+    <span class="emoji">🎥</span> Video Codecs
+  </a>
+  <span class="nav-lesson">Lesson 3 / 6</span>
+  <button class="menu-btn" aria-label="Lessons">☰</button>
+</nav>
+
+<!-- Lesson Drawer -->
+<div class="drawer-overlay"></div>
+<aside class="lesson-drawer">
+  <div class="drawer-header">
+    <h3>Course Syllabus</h3>
+    <button class="drawer-close">✕</button>
+  </div>
+  <div class="drawer-progress-text">0/6 lessons</div>
+  <ul class="lesson-list">
+    <li><a href="index.html"><span class="lesson-num">🏠</span>Home</a></li>
+    <li><a href="lesson1.html"><span class="lesson-num">01</span> How Video Codecs Work <span class="lesson-check" data-lesson="1">✓</span></a></li>
+    <li><a href="lesson2.html"><span class="lesson-num">02</span> Weaknesses of Existing Codecs <span class="lesson-check" data-lesson="2">✓</span></a></li>
+    <li><a href="lesson3.html" class="active"><span class="lesson-num">03</span> Hardware &amp; Codec Interplay <span class="lesson-check" data-lesson="3">✓</span></a></li>
+    <li><a href="lesson4.html"><span class="lesson-num">04</span> Modern Codec Landscape <span class="lesson-check" data-lesson="4">✓</span></a></li>
+    <li><a href="lesson5.html"><span class="lesson-num">05</span> Licensing &amp; Economics <span class="lesson-check" data-lesson="5">✓</span></a></li>
+    <li><a href="lesson6.html"><span class="lesson-num">06</span> Future Directions <span class="lesson-check" data-lesson="6">✓</span></a></li>
+  </ul>
+  <div class="progress-bar"><div class="progress-bar-fill" style="width:0%"></div></div>
+</aside>
+
+<!-- Main Content -->
+<main class="container">
+
+  <header class="lesson-header">
+    <div class="lesson-meta">Lesson 3</div>
+    <h1>Hardware &amp; Codec Interplay</h1>
+    <p class="lesson-subtitle">Why your phone can decode 4K but still struggles to encode it — and what lives inside the box</p>
+  </header>
+
+  <div class="story-hook">
+    Your laptop CPU can encode 1080p video in software — slowly. Your phone, with 1/10th the power budget, can decode 4K at 60 fps without breaking a sweat. The difference? <em>Specialized silicon</em>. While software codec implementations like x264 push the limits of what's possible algorithmically, hardware encoders and decoders sacrifice flexibility for blistering speed and energy efficiency. Understanding this tension is key to understanding the real-world deployment of any codec.
+  </div>
+
+  <div class="tldr">
+    <div class="tldr-label">TL;DR</div>
+    <p>Hardware encoding is fast and power-efficient but lags software encoders in quality at the same bitrate. Modern SoCs dedicate significant die area to media engines. The gap between reference encoders and practical real-time implementations determines what's viable for live streaming, cloud transcoding, and mobile playback.</p>
+  </div>
+
+  <!-- SECTION 1: The Big Divide -->
+  <h2>Software vs. Hardware: The Fundamental Trade-Off</h2>
+
+  <p>
+    The distinction between software encoding (pure CPU) and hardware encoding (fixed-function silicon) isn't just about speed — it's about fundamentally different design philosophies:
+  </p>
+
+  <div class="comparison-grid">
+    <div class="comparison-card">
+      <h4 style="color:#00bcd4;">🖥️ Software (CPU)</h4>
+      <p>Maximum flexibility. Every algorithm decision can be tuned, every mode tested. High encoding quality at the cost of speed and power. Think x264/x265 "placebo" preset.</p>
+    </div>
+    <div class="comparison-card">
+      <h4 style="color:#ff6b35;">⚡ Hardware (ASIC)</h4>
+      <p>Maximum throughput. Fixed pipeline with configurable parameters but rigid decisions. Less quality per bitrate, but can encode 4K in real-time at a few watts. Think NVENC, QuickSync, Apple VideoToolbox.</p>
+    </div>
+    <div class="comparison-card">
+      <h4 style="color:#76ff03;">🔀 Hybrid (GPU)</h4>
+      <p>Massive parallelism of GPUs used for motion estimation and pre-analysis, with CPU handling bitstream encoding. Good throughput with better quality than pure ASIC. Used in cloud transcoding.</p>
+    </div>
+  </div>
+
+  <p>
+    The quality gap between hardware and software encoders has <em>narrowed dramatically</em> over the last decade. Modern NVENC (Turing+) produces results approaching x264's "medium" preset, though still 10-20% higher bitrate for equivalent quality.
+  </p>
+
+  <h2>Rate-Distortion Comparison</h2>
+
+  <p>
+    The interactive curve below shows theoretical rate-distortion performance for different codecs. Higher is better — more quality at the same bitrate.
+  </p>
+
+  <div class="widget">
+    <div class="widget-header">📈 Rate-Distortion Curves (Codec Efficiency Comparison)</div>
+    <div class="widget-body">
+      <canvas id="rd-canvas" width="600" height="240" style="width:100%;height:auto;touch-action:manipulation;"></canvas>
+      <p class="widget-desc">
+        Each curve represents a different codec's efficiency frontier. Software encoders typically track closer to the theoretical curve; hardware encoders often sit below it.
+      </p>
+    </div>
+  </div>
+
+  <!-- SECTION 2: Hardware Encoder Landscape -->
+  <h2>The Hardware Encoder Landscape</h2>
+
+  <p>
+    Every major silicon vendor now includes dedicated media encode/decode blocks. Here's how they compare:
+  </p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Platform</th><th>Encoder</th><th>Codec Support</th><th>Quality Tier</th><th>Power</th><th>Best For</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>NVIDIA (Turing+)</td><td>NVENC/NVDEC</td><td>H.264, H.265, AV1 (RTX 40)</td><td>High</td><td>~5-15W</td><td>Streaming, transcoding</td></tr>
+        <tr><td>Intel (11th gen+)</td><td>QuickSync</td><td>H.264, H.265, VP9, AV1 (Arc)</td><td>Medium-High</td><td>~2-8W</td><td>Laptop encoding, transcoding</td></tr>
+        <tr><td>AMD (RX 6000+)</td><td>VCN/AMF</td><td>H.264, H.265, AV1 (RX 7000)</td><td>Medium</td><td>~5-12W</td><td>Streaming, recording</td></tr>
+        <tr><td>Apple (M1/M2/M3)</td><td>VideoToolbox</td><td>H.264, H.265, VP9 (decode), AV1 (M3 decode)</td><td>High</td><td>~1-5W</td><td>Mobile/desktop encoding</td></tr>
+        <tr><td>Qualcomm (Snapdragon)</td><td>Hexagon DSP + VPU</td><td>H.264, H.265, VP9, AV1 (8 Gen 2+)</td><td>Medium</td><td>~0.5-2W</td><td>Mobile encoding/decoding</td></tr>
+        <tr><td>MediaTek (Dimensity)</td><td>APU + VPU</td><td>H.264, H.265, AV1 (9000+)</td><td>Medium</td><td>~0.5-2W</td><td>Mobile encoding/decoding</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout-info">
+    <strong>Key insight:</strong> Apple's M-series chips represent a new paradigm — their media engine includes dedicated hardware for H.264, H.265, and ProRes encode/decode, plus AV1 decode starting with M3. The efficiency is so good that a MacBook Air can transcode 4K video for hours on battery.
+  </div>
+
+  <!-- SECTION 3: Partitioning Complexity -->
+  <h2>Partitioning: The First Hardware Bottleneck</h2>
+
+  <p>
+    Modern codecs (especially H.265 and AV1) support flexible block partitioning — splitting each frame into a quadtree of blocks, each independently coded. The optimal partition decision requires testing hundreds of combinations:
+  </p>
+
+  <div class="widget">
+    <div class="widget-header">🔲 Quadtree Partitioning Visualizer</div>
+    <div class="widget-body">
+      <div class="widget-controls">
+        <label>Partition depth:
+          <input type="range" id="depth-slider" min="1" max="4" value="3" step="1">
+        </label>
+        <span class="value-display" id="depth-display">3</span>
+      </div>
+      <canvas id="partition-canvas" width="300" height="300" style="width:100%;max-width:300px;height:auto;touch-action:manipulation;margin:0.5rem auto;"></canvas>
+      <p class="widget-desc">
+        Slide to change partition depth. More levels = more blocks to evaluate = higher encoding complexity. Hardware encoders use heuristics to prune this search tree.
+      </p>
+    </div>
+  </div>
+
+  <p>
+    A software encoder at maximum settings might test every possible partition at every depth — hundreds of thousands of RD cost calculations per frame. A hardware encoder uses <span class="key-term">fast search</span> algorithms and pre-analysis to prune the search space by 90-99%, accepting a small quality hit for massive speed gains.
+  </p>
+
+  <!-- SECTION 4: Motion Estimation in Hardware -->
+  <h2>Motion Estimation: Where Hardware Wins</h2>
+
+  <p>
+    Motion estimation — finding where each block moved from the previous frame — is the most computationally expensive part of encoding, often consuming 40-60% of encode time. But it's also the most <em>parallelizable</em>:
+  </p>
+
+  <ul class="content-list">
+    <li><strong>Software:</strong> Sequential search over a window, diamond search patterns, sub-pixel refinement. A reference encoder might test 200+ candidate motion vectors per block.</li>
+    <li><strong>Hardware:</strong> SAD (Sum of Absolute Differences) engines can compute hundreds of candidate matches per clock cycle. A dedicated motion estimation engine can search a 64×64 window in a few hundred cycles — something that would take tens of thousands of CPU cycles.</li>
+    <li><strong>FPGA:</strong> Customizable pipeline with programmable search patterns. Used in broadcast where latency matters and ASICs aren't available for new codecs.</li>
+  </ul>
+
+  <!-- SECTION 5: In-Loop Filtering -->
+  <h2>Deblocking &amp; In-Loop Filtering</h2>
+
+  <p>
+    After reconstructing each frame, codecs apply filters to reduce artifacts and improve prediction quality. These filters must run at decode time too, making their hardware implementation critical:
+  </p>
+
+  <div class="widget">
+    <div class="widget-header">🔍 Deblocking Filter Demo</div>
+    <div class="widget-body">
+      <div class="widget-controls">
+        <label>Filter strength:
+          <input type="range" id="filter-slider" min="0" max="100" value="50">
+        </label>
+        <span class="value-display" id="filter-display">50</span>
+      </div>
+      <canvas id="filter-canvas" width="600" height="160" style="width:100%;height:auto;touch-action:manipulation;"></canvas>
+      <p class="widget-desc">
+        Before/after comparison. Stronger filtering smooths block boundaries but can soften detail.
+      </p>
+    </div>
+  </div>
+
+  <p>
+    Modern codecs implement increasingly sophisticated filtering:
+  </p>
+
+  <ul class="content-list">
+    <li><strong>H.264:</strong> Simple 4×4 block boundary deblocking filter</li>
+    <li><strong>H.265:</strong> Deblocking + Sample Adaptive Offset (SAO)</li>
+    <li><strong>AV1:</strong> Deblocking + CDEF (constrained directional enhancement filter) + Loop Restoration (Wiener filter / self-guided filter)</li>
+    <li><strong>H.266/VVC:</strong> Deblocking + SAO + ALF (Adaptive Loop Filter) + CCALF (Cross-Component ALF)</li>
+  </ul>
+
+  <div class="callout-warn">
+    <strong>Complexity explosion:</strong> AV1's loop restoration filters require per-block decisions about filter type and strength, adding significant decoding complexity. This is one reason early AV1 hardware decoders were delayed and power-hungry compared to HEVC.
+  </div>
+
+  <!-- SECTION 6: Cloud Transcoding -->
+  <h2>Cloud Transcoding: The Economics of Scale</h2>
+
+  <p>
+    Services like Netflix, YouTube, and Twitch don't encode video once — they encode each piece of content <span class="key-term">hundreds of times</span>: different resolutions, bitrates, codecs, and formats. This creates an entirely different set of trade-offs.
+  </p>
+
+  <div class="callout">
+    <strong>Netflix encoding stack:</strong> Uses x264/x265 in software for their high-quality offline encodes, running on large CPU farms. But they also use GPU acceleration for their "fast start" live encoding path. Per-title encoding — customizing the encoding recipe per movie — saves ~20% bitrate for the same quality.
+  </div>
+
+  <p>
+    Cloud transcoding economics:
+  </p>
+
+  <ul class="content-list">
+    <li><strong>CPU encoding:</strong> ~5-20 fps per core, 200W per server, highest quality. Good for premium offline encodes.</li>
+    <li><strong>GPU encoding:</strong> ~50-200 fps per card, 150-350W per card, good quality. Sweet spot for cloud transcoding.</li>
+    <li><strong>ASIC encoding:</strong> ~200-1000 fps per chip, 10-30W, lower quality. Used for live streaming at scale.</li>
+  </ul>
+
+  <p>
+    The decision isn't just about quality — it's about <span class="key-term">density</span>. A data center running ASIC encoders can handle 10× the streams per watt compared to CPU, directly impacting the bottom line.
+  </p>
+
+  <!-- SECTION 7: Mobile & Consumer Decoders -->
+  <h2>Decoding: A Different Story</h2>
+
+  <p>
+    While encoding is computationally intensive, <span class="key-term">decoding</span> is comparatively simpler for hardware. Every modern phone ships with a dedicated video decoder block that handles:
+  </p>
+
+  <ul class="content-list">
+    <li><strong>Bitstream parsing:</strong> ENTropy decoding (CABAC) with dedicated logic</li>
+    <li><strong>Inverse transform:</strong> IDCT in silicon — completes in a fixed number of cycles</li>
+    <li><strong>Motion compensation:</strong> Interpolation filters with cached reference frames in on-chip SRAM</li>
+    <li><strong>Loop filtering:</strong> Pipelined deblocking/SAO/CDEF hardware</li>
+  </ul>
+
+  <p>
+    The result: a $200 phone can decode 4K60 H.265 using <span class="key-term">~100mW</span> — less than a tenth of what the same task would require on a general-purpose CPU. This is why streaming on mobile devices is viable at all.
+  </p>
+
+  <div class="callout-warn">
+    <strong>The AV1 decode problem:</strong> Early mobile chips (pre-2023) had no hardware AV1 decoder, forcing software decode. Software AV1 decode of 4K60 requires 4-8 Cortex-A76 cores running at full speed, consuming 5-10W — unsustainable for mobile. Snapdragon 8 Gen 2 and Apple M3 were among the first to include hardware AV1 decoders, and the difference is dramatic.
+  </div>
+
+  <!-- SECTION 8: FPGA & Broadcast -->
+  <h2>FPGAs and Broadcast</h2>
+
+  <p>
+    Between the flexibility of CPU and the speed of ASIC lies the <span class="key-term">FPGA</span> (Field-Programmable Gate Array). Broadcast video systems often use FPGA-based encoders because:
+  </p>
+
+  <ul class="content-list">
+    <li><strong>Hardware latency:</strong> Sub-millisecond encode latency, critical for live broadcast</li>
+    <li><strong>Reconfigurable:</strong> Can be updated for new codecs without silicon respin</li>
+    <li><strong>Deterministic:</strong> Fixed pipeline timing, no software scheduling jitter</li>
+    <li><strong>Bandwidth:</strong> Capable of 8K real-time encoding today</li>
+  </ul>
+
+  <p>
+    Companies like intoPIX and AHA (now part of Comcast) build FPGA-based encoding solutions for broadcast contribution links, where latency matters more than compression ratio.
+  </p>
+
+  <!-- SECTION 9: Looking Ahead -->
+  <h2>What This Means</h2>
+
+  <p>
+    The interplay between codec design and hardware implementation is a two-way street:
+  </p>
+
+  <ul class="content-list">
+    <li>Codec designers are increasingly <span class="key-term">hardware-aware</span> — avoiding features that are impractical in silicon</li>
+    <li>Hardware vendors influence standards bodies (MPEG, AOMedia) to ensure their timelines align with codec freeze dates</li>
+    <li>A codec is only as successful as its hardware decoder ecosystem — AV1's slow hardware rollout delayed adoption by ~3 years</li>
+    <li>The gap between software reference encoder and practical hardware encoder determines real-world codec performance</li>
+  </ul>
+
+  <p>
+    In the next lesson, we'll survey the full landscape of modern codecs and see how these practical constraints shaped each standard.
+  </p>
+
+  <!-- Completion -->
+  <div class="completion-box">
+    <span class="check-icon">○</span>
+    <span class="check-text">Mark as complete</span>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="lesson-nav-bottom">
+    <a href="lesson2.html" class="nav-btn prev">← Lesson 2</a>
+    <a href="lesson4.html" class="nav-btn next">Lesson 4 →</a>
+  </div>
+
+</main>
+
+<script src="assets/nav.js"></script>
+<script src="assets/codec-demo.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Rate-distortion curves
+  RDDemo.init('rd-canvas');
+
+  // Quadtree partitioning
+  PartitionDemo.init('partition-canvas', 'depth-slider', 'depth-display');
+
+  // Deblocking filter
+  FilterDemo.init('filter-canvas', 'filter-slider', 'filter-display');
+
+  console.log('🎥 Lesson 3: Hardware & Codec Interplay — Loaded!');
+});
+</script>
+</body>
+</html>
