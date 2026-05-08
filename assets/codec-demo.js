@@ -15,8 +15,8 @@
       const ctx = canvas.getContext('2d');
       const rect = canvas.getBoundingClientRect();
       const dpr = window.devicePixelRatio || 1;
-      const w = rect.width;
-      const h = rect.height || w;
+      const w = rect.width || canvas.width || 100;
+      const h = rect.height || canvas.height || w;
       canvas.width = w * dpr;
       canvas.height = h * dpr;
       ctx.scale(dpr, dpr);
@@ -66,8 +66,8 @@
       const ctx = canvas.getContext('2d');
       const rect = canvas.getBoundingClientRect();
       const dpr = window.devicePixelRatio || 1;
-      const w = rect.width;
-      const h = rect.height || 200;
+      const w = rect.width || canvas.width || 100;
+      const h = rect.height || canvas.height || 200;
       canvas.width = w * dpr;
       canvas.height = h * dpr;
       ctx.scale(dpr, dpr);
@@ -158,8 +158,8 @@
       const ctx = canvas.getContext('2d');
       const rect = canvas.getBoundingClientRect();
       const dpr = window.devicePixelRatio || 1;
-      const w = rect.width;
-      const h = rect.height || 220;
+      const w = rect.width || canvas.width || 100;
+      const h = rect.height || canvas.height || 220;
       canvas.width = w * dpr;
       canvas.height = h * dpr;
       ctx.scale(dpr, dpr);
@@ -311,8 +311,8 @@
       const ctx = canvas.getContext('2d');
       const rect = canvas.getBoundingClientRect();
       const dpr = window.devicePixelRatio || 1;
-      const w = Math.min(rect.width, 500);
-      const h = Math.min(rect.height || 300, 300);
+      const w = Math.min(rect.width || canvas.width || 300, 500);
+      const h = Math.min(rect.height || canvas.height || 200, 300);
       canvas.width = w * dpr;
       canvas.height = h * dpr;
       ctx.scale(dpr, dpr);
@@ -526,8 +526,9 @@
       function drawTestImage(q) {
         const rect = canvas.getBoundingClientRect();
         const dpr = window.devicePixelRatio || 1;
-        const w = rect.width;
-        const h = rect.height || 200;
+        // Use CSS layout dimensions, fall back to canvas attributes if layout not ready yet
+        const w = rect.width || canvas.width;
+        const h = rect.height || canvas.height || 200;
         canvas.width = w * dpr;
         canvas.height = h * dpr;
         ctx.scale(dpr, dpr);
@@ -626,8 +627,8 @@
       function draw() {
         const rect = canvas.getBoundingClientRect();
         const dpr = window.devicePixelRatio || 1;
-        const w = rect.width;
-        const h = rect.height || 220;
+        const w = rect.width || canvas.width || 100;
+        const h = rect.height || canvas.height || 220;
         canvas.width = w * dpr;
         canvas.height = h * dpr;
         ctx.scale(dpr, dpr);
@@ -809,8 +810,8 @@
       function draw() {
         const rect = canvas.getBoundingClientRect();
         const dpr = window.devicePixelRatio || 1;
-        const w = rect.width;
-        const h = rect.height || 240;
+        const w = rect.width || canvas.width || 100;
+        const h = rect.height || canvas.height || 240;
         canvas.width = w * dpr;
         canvas.height = h * dpr;
         ctx.scale(dpr, dpr);
@@ -945,8 +946,8 @@
       function draw() {
         const rect = canvas.getBoundingClientRect();
         const dpr = window.devicePixelRatio || 1;
-        const w = rect.width;
-        const h = rect.height || 140;
+        const w = rect.width || canvas.width || 100;
+        const h = rect.height || canvas.height || 140;
         canvas.width = w * dpr;
         canvas.height = h * dpr;
         ctx.scale(dpr, dpr);
@@ -1093,8 +1094,8 @@
       function draw() {
         const rect = canvas.getBoundingClientRect();
         const dpr = window.devicePixelRatio || 1;
-        const w = rect.width;
-        const h = rect.height || 200;
+        const w = rect.width || canvas.width || 100;
+        const h = rect.height || canvas.height || 200;
         canvas.width = w * dpr;
         canvas.height = h * dpr;
         ctx.scale(dpr, dpr);
@@ -1225,8 +1226,8 @@
       function draw() {
         const rect = canvas.getBoundingClientRect();
         const dpr = window.devicePixelRatio || 1;
-        const w = rect.width;
-        const h = rect.height || w;
+        const w = rect.width || canvas.width || 100;
+        const h = rect.height || canvas.height || w;
         canvas.width = w * dpr;
         canvas.height = h * dpr;
         ctx.scale(dpr, dpr);
@@ -1310,7 +1311,7 @@
       function draw() {
         const rect = canvas.getBoundingClientRect();
         const dpr = window.devicePixelRatio || 1;
-        const w = rect.width;
+        const w = rect.width || canvas.width || 100;
         const h = rect.height || 160;
         canvas.width = w * dpr;
         canvas.height = h * dpr;
@@ -1399,7 +1400,7 @@
       function draw() {
         const rect = canvas.getBoundingClientRect();
         const dpr = window.devicePixelRatio || 1;
-        const w = rect.width;
+        const w = rect.width || canvas.width || 100;
         const h = rect.height || 150;
         canvas.width = w * dpr;
         canvas.height = h * dpr;

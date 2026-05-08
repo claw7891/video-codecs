@@ -18,6 +18,42 @@
   .demo-video canvas {
     display: block;
     touch-action: manipulation;
+    height: 160px !important;
+  }
+  .frame-strip {
+    display: flex;
+    gap: 3px;
+    justify-content: center;
+    margin: 1rem 0;
+    flex-wrap: wrap;
+  }
+  .frame-block {
+    width: 48px;
+    height: 64px;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: #fff;
+    position: relative;
+  }
+  .frame-block .frame-letter { font-size: 1.1rem; font-weight: 800; }
+  .frame-block .frame-num { font-size: 0.6rem; opacity: 0.7; }
+  .frame-block.i-frame { background: #ff6b35; }
+  .frame-block.p-frame { background: #00bcd4; }
+  .frame-block.b-frame { background: #55556a; }
+  .frame-block .mv-arrow {
+    position: absolute;
+    top: -8px;
+    font-size: 0.5rem;
+    color: rgba(255,255,255,0.5);
+  }
+  .frame-block .mv-arrow.bwd {
+    top: auto;
+    bottom: -8px;
   }
   .codec-comparison {
     display: grid;
@@ -177,30 +213,74 @@
   </p>
 
   <div class="widget">
-    <div class="widget-header">📊 Frame Type Comparison</div>
+    <div class="widget-header">📊 Frame Types in Action</div>
     <div class="widget-body">
-      <div class="codec-comparison">
-        <div class="codec-card">
-          <h3>I-Frame</h3>
-          <p>Largest size</p>
-          <p>Random access</p>
-          <p>Reference for others</p>
+      <div class="frame-strip" id="frame-strip">
+        <div class="frame-block i-frame">
+          <span class="frame-letter">I</span>
+          <span class="frame-num">1</span>
         </div>
-        <div class="codec-card">
-          <h3>P-Frame</h3>
-          <p>Medium size</p>
-          <p>Uses past frames</p>
-          <p>Good compression</p>
+        <div class="frame-block b-frame">
+          <span class="frame-letter">B</span>
+          <span class="frame-num">2</span>
         </div>
-        <div class="codec-card">
-          <h3>B-Frame</h3>
-          <p>Smallest size</p>
-          <p>Uses past & future</p>
-          <p>Best compression</p>
+        <div class="frame-block b-frame">
+          <span class="frame-letter">B</span>
+          <span class="frame-num">3</span>
+        </div>
+        <div class="frame-block p-frame">
+          <span class="frame-letter">P</span>
+          <span class="frame-num">4</span>
+        </div>
+        <div class="frame-block b-frame">
+          <span class="frame-letter">B</span>
+          <span class="frame-num">5</span>
+        </div>
+        <div class="frame-block b-frame">
+          <span class="frame-letter">B</span>
+          <span class="frame-num">6</span>
+        </div>
+        <div class="frame-block p-frame">
+          <span class="frame-letter">P</span>
+          <span class="frame-num">7</span>
+        </div>
+        <div class="frame-block b-frame">
+          <span class="frame-letter">B</span>
+          <span class="frame-num">8</span>
+        </div>
+        <div class="frame-block b-frame">
+          <span class="frame-letter">B</span>
+          <span class="frame-num">9</span>
+        </div>
+        <div class="frame-block p-frame">
+          <span class="frame-letter">P</span>
+          <span class="frame-num">10</span>
+        </div>
+        <div class="frame-block b-frame">
+          <span class="frame-letter">B</span>
+          <span class="frame-num">11</span>
+        </div>
+        <div class="frame-block i-frame">
+          <span class="frame-letter">I</span>
+          <span class="frame-num">12</span>
         </div>
       </div>
-      <p style="font-size:0.8rem;color:var(--text-muted);text-align:center;margin-top:0.5rem;">
-        Trade-off: B-frames compress best but require more memory and processing
+      <div class="codec-comparison">
+        <div class="codec-card">
+          <h4 style="color:#ff6b35;">I‑Frame</h4>
+          <p>Largest, self-contained. Enables random access and seeking.</p>
+        </div>
+        <div class="codec-card">
+          <h4 style="color:#00bcd4;">P‑Frame</h4>
+          <p>Medium. Predicts from previous I/P frames using motion vectors.</p>
+        </div>
+        <div class="codec-card">
+          <h4 style="color:#888;">B‑Frame</h4>
+          <p>Smallest. Uses both past and future frames for best compression.</p>
+        </div>
+      </div>
+      <p class="widget-desc">
+        A GOP (Group of Pictures) with 12 frames. I-frames are orange, P-frames are blue, B-frames are gray. B-frames give the most compression but need both directions for decoding.
       </p>
     </div>
   </div>
